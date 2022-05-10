@@ -13,6 +13,6 @@
 ✔️ 최은진 
 <br>
 
-## Develop Env.
+## 🖥 Develop Env.
 - Python 3.8.2
 - Django 4.0.4
