@@ -1,0 +1,63 @@
+body {
+    font-size: 1em;
+    font-family: "나눔스퀘어";
+    padding : 5%;
+}
+
+#video {
+    display: inline-block;
+    float : left;
+    width: 49%;
+    margin-right : 2%;
+}
+
+#video > iframe{
+    display : block;
+}
+
+#capture {
+    display: inline-block;
+    width : 49%;
+    height : 500px;
+    overflow-y:scroll;
+}
+
+#capture > img {
+    width : 100%;
+}
+
+#summary {
+    display: inline-block;
+    width : 70%;
+    margin-top: 10px;
+    margin-right : 5%;
+    float: left;
+}
+
+#keywords {
+    display: inline-block;
+    width : 20%;
+    margin-top: 10px;
+    background-color: gray;
+    padding-left: 5%;
+}
+
+#keywords > p {
+    margin-top : 5px ;
+    margin-bottom: 5px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+#whole_text {
+    margin-top : 10px;
+    width: 100%;
+    display: inline-block;
+}
+
+#quiz {
+    display : block;
+    margin-top : 10px;
+    width: 100%;
+}
