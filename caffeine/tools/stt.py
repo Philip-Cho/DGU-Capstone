@@ -61,4 +61,6 @@ def transcribe_gcs(gcs_uri, content, sample_rate_hertz):
     f.close()
     print("STT 완료")
 
+
+
     return text_2

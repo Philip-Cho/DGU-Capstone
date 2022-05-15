@@ -2,15 +2,17 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 import os, os.path
-from down_movie import downYoutubeMp3, down_title
-from stt import upload_blob_from_memory,transcribe_gcs
+from .tools.down_movie import downYoutubeMp3, down_title
+from .tools.stt import upload_blob_from_memory,transcribe_gcs
+from .tools.sum import load_model,summary_text
 import json
+
 
 models = list()
 contents = list()
 movie_urls = list()
 movie_titles = list()
-myips = list()
+
 text_alls = list()
 
 def index(request):
@@ -67,5 +69,20 @@ def text(request):
             'text_all': text_all,
         }
 
-    return HttpResponse(json.dumps(gen), "application/json")
+    return JsonResponse(gen)
 
+@csrf_exempt
+def summary(request):
+    if request.method == 'POST':
+        # 모델 로드
+        model = load_model()
+        models.append(model)
+        print("모델 로드 완료")
+        # 요약문 생성
+        sum_text = summary_text(text_alls[0], models[0])
+        print(sum_text)
+
+        result = {
+            "sum_text" : sum_text
+        }
+    return JsonResponse(result)

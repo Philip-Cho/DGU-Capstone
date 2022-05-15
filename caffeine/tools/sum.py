@@ -1,4 +1,4 @@
-from summarizer import Summarizer,TransformerSummarizer
+from summarizer import TransformerSummarizer
 
 
 def load_model():
@@ -11,3 +11,5 @@ def summary_text(text, model):
     GPT2_model = model
     sum_text = ''.join(GPT2_model(text, min_length=60))
     return sum_text
+
+
