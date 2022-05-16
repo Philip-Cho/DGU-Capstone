@@ -1,16 +1,19 @@
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 import os, os.path
-from down_movie import downYoutubeMp3, down_title
-from stt import upload_blob_from_memory,transcribe_gcs
+from .tools.down_movie import downYoutubeMp3, down_title
+from .tools.stt import upload_blob_from_memory,transcribe_gcs
+from .tools.sum import load_model,summary_text
+from .tools.textrank import key_question
 import json
+
 
 models = list()
 contents = list()
 movie_urls = list()
 movie_titles = list()
-myips = list()
+
 text_alls = list()
 
 def index(request):
@@ -67,5 +70,60 @@ def text(request):
             'text_all': text_all,
         }
 
-    return HttpResponse(json.dumps(gen), "application/json")
+    return JsonResponse(gen)
 
+@csrf_exempt
+def summary(request):
+    if request.method == 'POST':
+        # 모델 로드
+        model = load_model()
+        models.append(model)
+        print("모델 로드 완료")
+        # 요약문 생성
+        sum_text = summary_text(text_alls[0], models[0])
+        print(sum_text)
+
+        result = {
+            "sum_text" : sum_text
+        }
+    return JsonResponse(result)
+
+@csrf_exempt
+def keytext(request):
+    if request.method == 'POST':
+
+        key_dict= key_question()
+
+        keywords = ''
+        count = 1
+        for i in key_dict["keywords"]:
+
+            keywords += str(count) + '순위 : ' + str(i) + '<br>'
+            count += 1
+        print(keywords)
+        result ={
+            "keyword" : keywords
+        }
+    return JsonResponse(result)
+
+
+@csrf_exempt
+def keytext(request):
+    if request.method == 'POST':
+
+        key_dict= key_question()
+
+        keywords = ''
+        count = 1
+        for i in key_dict["keywords"]:
+
+            keywords += str(count) + '순위 : ' + str(i) + '<br>'
+            count += 1
+        print(keywords)
+        result ={
+            "keyword" : keywords,
+            "sentence_blank" : key_dict["sentence_blank"] + '<br><br><br><br>',
+            "sentence" : key_dict["sentence"] + '<br><br>',
+            "answer": key_dict["answer"]
+        }
+    return JsonResponse(result)
