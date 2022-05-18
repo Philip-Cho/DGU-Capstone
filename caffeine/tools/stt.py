@@ -22,6 +22,17 @@ def upload_blob_from_memory(bucket_name, contents, destination_blob_name):
 # STT
 def transcribe_gcs(gcs_uri, content, sample_rate_hertz):
     print("STT 시작")
+    ## 가중치 파일로드
+    words_list = list()
+    with open("text/sciwords.txt") as f:
+        text = f.read()
+        for i in text.split():
+            words_list.append(i)
+
+    boost = 20.0
+    speech_contexts_element = {"phrases": words_list, "boost": boost}
+    speech_contexts = [speech_contexts_element]
+
     client = speech.SpeechClient()
     audio = speech.RecognitionAudio(uri=gcs_uri)
     config = speech.RecognitionConfig(
@@ -32,7 +43,9 @@ def transcribe_gcs(gcs_uri, content, sample_rate_hertz):
         language_code="en-US",
         audio_channel_count=2,
         enable_separate_recognition_per_channel=True,
-        enable_automatic_punctuation=True)
+        enable_automatic_punctuation=True,
+        speech_contexts = speech_contexts
+    )
 
     operation = client.long_running_recognize(config=config, audio=audio)
     response = operation.result()
