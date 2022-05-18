@@ -85,30 +85,40 @@ def summary(request):
         }
     return JsonResponse(result)
 
+# @csrf_exempt
+# def keytext(request):
+#     if request.method == 'POST':
+#
+#         #path 설정
+#         path = os.getcwd()
+#         folder_text = "text"
+#         text_file = contents[0]
+#
+#         key_dict= key_question(os.path.join(path, folder_text, text_file))
+#
+#         keywords = ''
+#         count = 1
+#         for i in key_dict["keywords"]:
+#
+#             keywords += str(count) + '순위 : ' + str(i) + '<br>'
+#             count += 1
+#         print(keywords)
+#         result ={
+#             "keyword" : keywords
+#         }
+#     return JsonResponse(result)
+
+
 @csrf_exempt
 def keytext(request):
     if request.method == 'POST':
 
-        key_dict= key_question()
+        # path 설정
+        path = os.getcwd()
+        folder_text = "text"
+        text_file = contents[0] + ".txt"
 
-        keywords = ''
-        count = 1
-        for i in key_dict["keywords"]:
-
-            keywords += str(count) + '순위 : ' + str(i) + '<br>'
-            count += 1
-        print(keywords)
-        result ={
-            "keyword" : keywords
-        }
-    return JsonResponse(result)
-
-
-@csrf_exempt
-def keytext(request):
-    if request.method == 'POST':
-
-        key_dict= key_question()
+        key_dict = key_question(os.path.join(path, folder_text, text_file))
 
         keywords = ''
         count = 1

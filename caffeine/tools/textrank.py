@@ -94,7 +94,7 @@ def keysents_blank(keywords: list, keysents: list):
     return {'keywords': keywords, 'sentence_blank': keysent_blank, 'sentence': keysent, 'answer': keyword_keysent}
 
 
-def key_question(script_path='text/075-Clustering algorithms.flac.txt'):
+def key_question(script_path):
     sent_ngram = 2
     stopwords_path = 'text/stop_words_english.txt'
     script_path = script_path
