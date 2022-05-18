@@ -22,5 +22,5 @@ def main():
 
 if __name__ == '__main__':
     # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = input("Please Enter Key Root : ")
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "C:/Users/심종수/Desktop/dgu-dscapstone.json"
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "C:/Users/eunjin/Desktop/dgu-dscapstone.json"
     main()
