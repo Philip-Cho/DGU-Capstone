@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 import os, os.path
 from .tools.down_movie import downYoutubeMp3, down_title
 from .tools.stt import upload_blob_from_memory,transcribe_gcs
-from .tools.sum import load_model,summary_text
+from .tools.sum import summary_text
 from .tools.textrank import key_question
 import json
 
@@ -26,7 +26,7 @@ def result(request):
         movie_url = request.POST['address']
         movie_urls.append(movie_url)
         # 동영상 이름 추출
-        movie_title = down_title(movie_url)
+        movie_title = down_title(movie_url).replace(":"," -")
         movie_titles.append(movie_title)
 
         # 파일 이름 정의
@@ -49,9 +49,10 @@ def text(request):
 
         # 동영상 path가져오기
         path = os.getcwd()
+        print(path)
         folder_yt = "yt"
         file_path = os.path.join(path, folder_yt, contents[0])
-
+        print(file_path)
         # 동영상 스토리지 업로드
         upload_blob_from_memory("dgu_dsc_stt", file_path, contents[0])
 
@@ -75,12 +76,8 @@ def text(request):
 @csrf_exempt
 def summary(request):
     if request.method == 'POST':
-        # 모델 로드
-        model = load_model()
-        models.append(model)
-        print("모델 로드 완료")
         # 요약문 생성
-        sum_text = summary_text(text_alls[0], models[0])
+        sum_text = summary_text(text_alls[0])
         print(sum_text)
 
         result = {

@@ -1,15 +1,17 @@
-from summarizer import TransformerSummarizer
+from transformers import BartTokenizer, BartForConditionalGeneration
 
+def summary_text(text):
 
-def load_model():
     print("모델 로드 시작")
-    GPT2_model = TransformerSummarizer(transformer_type="GPT2", transformer_model_key="gpt2-medium")
-    print("모델 로드 완료")
-    return GPT2_model
+    model_sci = BartForConditionalGeneration.from_pretrained("bart_model/finetuning_scitldr")
+    tokenizer_sci = BartTokenizer.from_pretrained("bart_model/tokenizer")
 
-def summary_text(text, model):
-    GPT2_model = model
-    sum_text = ''.join(GPT2_model(text, min_length=60))
-    return sum_text
+    print("요약 시작")
+    inputs = tokenizer_sci([text], max_length=1024, return_tensors="pt")
+    summary_ids = model_sci.generate(inputs["input_ids"], num_beams=5, min_length=0, max_length=150)
+    summary = tokenizer_sci.batch_decode(summary_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
+
+    return summary
+
 
 
