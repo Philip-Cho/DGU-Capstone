@@ -1,6 +1,8 @@
 from keybert import KeyBERT
 from sklearn.feature_extraction.text import TfidfVectorizer
 from nltk.tokenize import word_tokenize, sent_tokenize
+from google.cloud import storage
+
 import numpy as np
 
 # 2) Preprocess the sentences
