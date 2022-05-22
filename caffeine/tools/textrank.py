@@ -93,8 +93,11 @@ def keysents_blank(keywords: list, keysents: list):
     print("키워드 추출 완료")
     return {'keywords': keywords, 'sentence_blank': keysent_blank, 'sentence': keysent, 'answer': keyword_keysent}
 
+def load_key_model():
+    model = KeyBERT('all-MiniLM-L12-v2')
+    return model
 
-def key_question(script_path):
+def key_question(script_path, model):
     sent_ngram = 2
     stopwords_path = 'text/stop_words_english.txt'
     script_path = script_path
@@ -116,7 +119,7 @@ def key_question(script_path):
     sorted_sent_idx = sorted(sent_rank_idx,  # 문장 가중치 그래프-가중치 작은 차순 정렬
                              key=lambda k: sent_rank_idx[k], reverse=True)
     keysents = get_keysents(sorted_sent_idx, sentences, sent_num=10)
-    kw_model = KeyBERT('all-MiniLM-L12-v2')
+    kw_model = model
     keywords_weight = get_keywords(text, kw_model, 10, stop_words)
     keywords = [word_tup[0] for word_tup in keywords_weight]
 

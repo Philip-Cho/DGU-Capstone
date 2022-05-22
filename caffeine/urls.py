@@ -8,5 +8,7 @@ urlpatterns = [
     path('text/', views.text),
     path('summary/', views.summary),
     path('keytext/', views.keytext),
+    path('model/',views.model),
     path('board/',views.board),
+    path('savedb/',views.savedb),
 ]

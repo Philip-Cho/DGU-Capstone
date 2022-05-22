@@ -1,5 +1,5 @@
 from django.http import HttpResponse,JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import login, authenticate
 from caffeine.forms import RegisterForm
@@ -7,15 +7,24 @@ from caffeine.forms import RegisterForm
 import os, os.path
 from .tools.down_movie import downYoutubeMp3, down_title
 from .tools.stt import upload_blob_from_memory,transcribe_gcs
-from .tools.sum import summary_text
-from .tools.textrank import key_question
+
 from .tools.vision_text import text_detection
+from .tools.sum import summary_text,sum_model_load
+from .tools.textrank import key_question,load_key_model
+from .models import LectureHistory
+from .models import Users
+from django.core.paginator import Paginator
+
 import json
 
+models_sum = list()
+tokens_sum = list()
 
-models = list()
+models_key = list()
+
 contents = list()
 movie_urls = list()
+embed_urls = list()
 movie_titles = list()
 code_imgs = list()
 
@@ -23,6 +32,15 @@ text_alls = list()
 
 def index(request):
     return render(request, 'index.html')
+
+def model(request):
+    ## summary 모델 로드
+    model_sum, token_sum = sum_model_load()
+    models_sum.append(model_sum)
+    tokens_sum.append(token_sum)
+    ## keybert 모델 로드
+    models_key.append(load_key_model())
+    return HttpResponse("!!모델로드 완료!!")
 
 @csrf_exempt
 def result(request):
@@ -39,6 +57,20 @@ def result(request):
         contents.append(content)
         # 임베딩 링크 생성
         embed_url = movie_url.replace('watch?v=', "embed/")
+        embed_urls.append(embed_url)
+        ## DB
+        ## user
+        user = Users()
+        user.id = "shim"
+        user.save()
+
+        ## history
+        history = LectureHistory()
+        history.lecture_id = get_object_or_404(Users, id="shim")
+        history.lecture_name = movie_title
+        history.embed_url = embed_url
+        history.lecture_url = movie_url
+        history.save()
 
         context = {
             'embed_url': embed_url,
@@ -119,7 +151,7 @@ def code_to_text(request):
 def summary(request):
     if request.method == 'POST':
         # 요약문 생성
-        sum_text = summary_text(text_alls[-1])
+        sum_text = summary_text(text_alls[-1],models_sum[-1],tokens_sum[-1])
         print(sum_text)
 
         result = {
@@ -137,7 +169,7 @@ def keytext(request):
         folder_text = "text"
         text_file = contents[-1] + ".txt"
 
-        key_dict = key_question(os.path.join(path, folder_text, text_file))
+        key_dict = key_question(os.path.join(path, folder_text, text_file),models_key[-1])
 
         keywords = ''
         count = 1
@@ -154,10 +186,37 @@ def keytext(request):
         }
     return JsonResponse(result)
 
+@csrf_exempt
+def savedb(request):
+    if request.method == 'POST':
+        ## DB
+        ## user
+        user = Users()
+        user.id = "shim"
+        user.save()
+
+        ## history
+        history = LectureHistory()
+        history.lecture_id = get_object_or_404(Users, id="shim")
+        history.lecture_name = movie_titles[-1]
+        history.embed_url = embed_urls[-1]
+        history.lecture_url = movie_urls[-1]
+        history.save()
+
+    # 요약본 출력
+    return HttpResponse("!!DB 저장 완료!!")
 
 @csrf_exempt
 def board(request):
-    return render(request, 'board.html')
+    # 제목 출력
+    page = request.GET.get('page', '1')  # 페이지
+    question_list = LectureHistory.objects.order_by('lecture_name')
+    paginator = Paginator(question_list, 10)  # 페이지당 10개씩
+    page_obj = paginator.get_page(page)
+    context = {'lecture_list': page_obj}
+
+    return render(request, 'board.html', context)
+
 
 def register(request):
     if request.method == "POST":
