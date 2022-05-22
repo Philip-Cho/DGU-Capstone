@@ -4,12 +4,18 @@ from django.views.decorators.csrf import csrf_exempt
 import os, os.path
 from .tools.down_movie import downYoutubeMp3, down_title
 from .tools.stt import upload_blob_from_memory,transcribe_gcs
-from .tools.sum import summary_text
-from .tools.textrank import key_question
+from .tools.sum import summary_text,sum_model_load
+from .tools.textrank import key_question,load_key_model
+from .models import LectureHistory
+from .models import Users
+
 import json
 
+models_sum = list()
+tokens_sum = list()
 
-models = list()
+models_key = list()
+
 contents = list()
 movie_urls = list()
 movie_titles = list()
@@ -18,6 +24,15 @@ text_alls = list()
 
 def index(request):
     return render(request, 'index.html')
+
+def model(request):
+    ## summary 모델 로드
+    model_sum, token_sum = sum_model_load()
+    models_sum.append(model_sum)
+    tokens_sum.append(token_sum)
+    ## keybert 모델 로드
+    models_key.append(load_key_model())
+    return HttpResponse("!!모델로드 완료!!")
 
 @csrf_exempt
 def result(request):
@@ -34,6 +49,19 @@ def result(request):
         contents.append(content)
         # 임베딩 링크 생성
         embed_url = movie_url.replace('watch?v=', "embed/")
+
+        ## DB
+        ## user
+        user = Users()
+        user.id = 1
+
+        # ## history
+        # history = LectureHistory()
+        # history.lecture_id = user.id
+        # history.lecture_name = movie_title
+        # history.embed_url = embed_url
+        # history.lecture_url = movie_url
+        # history.save()
 
         context = {
             'embed_url': embed_url,
@@ -77,7 +105,7 @@ def text(request):
 def summary(request):
     if request.method == 'POST':
         # 요약문 생성
-        sum_text = summary_text(text_alls[-1])
+        sum_text = summary_text(text_alls[-1],models_sum[-1],tokens_sum[-1])
         print(sum_text)
 
         result = {
@@ -95,7 +123,7 @@ def keytext(request):
         folder_text = "text"
         text_file = contents[-1] + ".txt"
 
-        key_dict = key_question(os.path.join(path, folder_text, text_file))
+        key_dict = key_question(os.path.join(path, folder_text, text_file),models_key[-1])
 
         keywords = ''
         count = 1
@@ -115,4 +143,7 @@ def keytext(request):
 
 @csrf_exempt
 def board(request):
+    # 제목 출력
+
+    # 요약본 출력
     return render(request, 'board.html')
