@@ -74,6 +74,12 @@ def text(request):
 
     return JsonResponse(gen)
 
+# codes 폴더에 있는 모든 이미지 캡처 순서대로 정렬 후 불러오기
+@csrf_exempt
+def get_code_imgs(path):
+    file_list = os.listdir(path)
+    code_imgs = sorted(file_list)    
+
 @csrf_exempt
 def code_to_text(request):
     if request.method == 'POST':
@@ -82,6 +88,7 @@ def code_to_text(request):
         path = os.getcwd()
         print(path)
         folder_codes = "codes"
+        get_code_imgs(path + '/' + folder_codes)
         img_path = os.path.join(path, folder_codes, code_imgs[-1])
         print(img_path)
         code_text = list()
