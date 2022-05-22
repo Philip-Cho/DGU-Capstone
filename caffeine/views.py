@@ -13,6 +13,7 @@ models = list()
 contents = list()
 movie_urls = list()
 movie_titles = list()
+code_imgs = list()
 
 text_alls = list()
 
@@ -70,6 +71,36 @@ def text(request):
         gen = {
             'text_all': text_all,
         }
+
+    return JsonResponse(gen)
+
+@csrf_exempt
+def code_to_text(request):
+    if request.method == 'POST':
+
+        # 이미지 경로 탐색
+        path = os.getcwd()
+        print(path)
+        folder_codes = "codes"
+        img_path = os.path.join(path, folder_codes, code_imgs[-1])
+        print(img_path)
+        code_text = list()
+        
+        """
+        코드 저장
+        - 코드는 한줄씩을 값으로 하는 리스트 형태로 저장됨
+        """
+        try:
+            code_text = text_detection(img_path)
+        except:
+            print('no code text detected')
+            code_text = text_detection(img_path)
+
+        print(code_text)
+        
+        gen = {}
+        for idx, code in enumerate(code_text):
+            gen[idx] = code
 
     return JsonResponse(gen)
 
