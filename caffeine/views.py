@@ -45,25 +45,25 @@ def result(request):
 def text(request):
     if request.method == 'POST':
         # 동영상 다운
-        downYoutubeMp3(movie_urls[0])
+        downYoutubeMp3(movie_urls[-1])
 
         # 동영상 path가져오기
         path = os.getcwd()
         print(path)
         folder_yt = "yt"
-        file_path = os.path.join(path, folder_yt, contents[0])
+        file_path = os.path.join(path, folder_yt, contents[-1])
         print(file_path)
         # 동영상 스토리지 업로드
-        upload_blob_from_memory("dgu_dsc_stt", file_path, contents[0])
+        upload_blob_from_memory("dgu_dsc_stt", file_path, contents[-1])
 
         # 동영상 STT
         # 스토리지 path
         gcs_url = "gs://dgu_dsc_stt/"
-        gcs_file = gcs_url + contents[0]
+        gcs_file = gcs_url + contents[-1]
         try:
-            text_all = transcribe_gcs(gcs_file, contents[0], 44100)
+            text_all = transcribe_gcs(gcs_file, contents[-1], 44100)
         except:
-            text_all = transcribe_gcs(gcs_file, contents[0], 48000)
+            text_all = transcribe_gcs(gcs_file, contents[-1], 48000)
 
         text_alls.append(text_all)
         print(text_all)
@@ -77,36 +77,13 @@ def text(request):
 def summary(request):
     if request.method == 'POST':
         # 요약문 생성
-        sum_text = summary_text(text_alls[0])
+        sum_text = summary_text(text_alls[-1])
         print(sum_text)
 
         result = {
             "sum_text" : sum_text
         }
     return JsonResponse(result)
-
-# @csrf_exempt
-# def keytext(request):
-#     if request.method == 'POST':
-#
-#         #path 설정
-#         path = os.getcwd()
-#         folder_text = "text"
-#         text_file = contents[0]
-#
-#         key_dict= key_question(os.path.join(path, folder_text, text_file))
-#
-#         keywords = ''
-#         count = 1
-#         for i in key_dict["keywords"]:
-#
-#             keywords += str(count) + '순위 : ' + str(i) + '<br>'
-#             count += 1
-#         print(keywords)
-#         result ={
-#             "keyword" : keywords
-#         }
-#     return JsonResponse(result)
 
 
 @csrf_exempt
@@ -116,7 +93,7 @@ def keytext(request):
         # path 설정
         path = os.getcwd()
         folder_text = "text"
-        text_file = contents[0] + ".txt"
+        text_file = contents[-1] + ".txt"
 
         key_dict = key_question(os.path.join(path, folder_text, text_file))
 
