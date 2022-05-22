@@ -1,11 +1,15 @@
 from django.http import HttpResponse,JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import login, authenticate
+from caffeine.forms import RegisterForm
+
 import os, os.path
 from .tools.down_movie import downYoutubeMp3, down_title
 from .tools.stt import upload_blob_from_memory,transcribe_gcs
 from .tools.sum import summary_text
 from .tools.textrank import key_question
+from .tools.vision_text import text_detection
 import json
 
 
@@ -154,3 +158,19 @@ def keytext(request):
 @csrf_exempt
 def board(request):
     return render(request, 'board.html')
+
+def register(request):
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        msg = 'Wrong Data'
+        if form.is_valid(): # 비밀번호 길이 만족하는지 등
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            msg = '회원가입 완료!'
+        return render(request, 'register.html', {'form': form, 'msg': msg})
+    else:
+        form = RegisterForm()
+        return render(request, 'register.html', {'form': form})

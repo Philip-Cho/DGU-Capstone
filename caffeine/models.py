@@ -1,6 +1,7 @@
-from sqlite3 import Timestamp
 from django.db import models
 from sympy import N
+
+from django.contrib.auth.models import AbstractUser
 
 
 # # create/update 시간 기록
@@ -18,11 +19,11 @@ from sympy import N
     - Users : LectureHistory = 1 : n 
 """
 # 유저
-class Users(models.Model):
-    id = models.CharField(max_length=20, primary_key=True, null=False)
-    password = models.CharField(max_length=20, null=False)
-    name = models.CharField(max_length=20, null=False)
-    email = models.EmailField(max_length=40, null=False)
+class Users(AbstractUser):
+    id = models.CharField(max_length=20, primary_key=True, null=False, default='')
+    # password = models.CharField(max_length=20, null=False)
+    # name = models.CharField(max_length=20, null=False)
+    # email = models.EmailField(max_length=40, null=False)
  
 """
 [LectureHistory]

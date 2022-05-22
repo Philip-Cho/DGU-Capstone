@@ -8,6 +8,5 @@ urlpatterns = [
     path('text/', views.text),
     path('summary/', views.summary),
     path('keytext/', views.keytext),
-
-    path('board/',views.board)
+    path('board/',views.board),
 ]
