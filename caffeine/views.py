@@ -1,5 +1,5 @@
 from django.http import HttpResponse,JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 import os, os.path
 from .tools.down_movie import downYoutubeMp3, down_title
@@ -8,6 +8,7 @@ from .tools.sum import summary_text,sum_model_load
 from .tools.textrank import key_question,load_key_model
 from .models import LectureHistory
 from .models import Users
+from django.core.paginator import Paginator
 
 import json
 
@@ -18,6 +19,7 @@ models_key = list()
 
 contents = list()
 movie_urls = list()
+embed_urls = list()
 movie_titles = list()
 code_imgs = list()
 
@@ -50,19 +52,20 @@ def result(request):
         contents.append(content)
         # 임베딩 링크 생성
         embed_url = movie_url.replace('watch?v=', "embed/")
-
+        embed_urls.append(embed_url)
         ## DB
         ## user
         user = Users()
-        user.id = 1
+        user.id = "shim"
+        user.save()
 
-        # ## history
-        # history = LectureHistory()
-        # history.lecture_id = user.id
-        # history.lecture_name = movie_title
-        # history.embed_url = embed_url
-        # history.lecture_url = movie_url
-        # history.save()
+        ## history
+        history = LectureHistory()
+        history.lecture_id = get_object_or_404(Users, id="shim")
+        history.lecture_name = movie_title
+        history.embed_url = embed_url
+        history.lecture_url = movie_url
+        history.save()
 
         context = {
             'embed_url': embed_url,
@@ -178,10 +181,33 @@ def keytext(request):
         }
     return JsonResponse(result)
 
+@csrf_exempt
+def savedb(request):
+    if request.method == 'POST':
+        ## DB
+        ## user
+        user = Users()
+        user.id = "shim"
+        user.save()
+
+        ## history
+        history = LectureHistory()
+        history.lecture_id = get_object_or_404(Users, id="shim")
+        history.lecture_name = movie_titles[-1]
+        history.embed_url = embed_urls[-1]
+        history.lecture_url = movie_urls[-1]
+        history.save()
+
+    # 요약본 출력
+    return HttpResponse("!!DB 저장 완료!!")
 
 @csrf_exempt
 def board(request):
     # 제목 출력
+    page = request.GET.get('page', '1')  # 페이지
+    question_list = LectureHistory.objects.order_by('lecture_name')
+    paginator = Paginator(question_list, 10)  # 페이지당 10개씩
+    page_obj = paginator.get_page(page)
+    context = {'lecture_list': page_obj}
 
-    # 요약본 출력
-    return render(request, 'board.html')
+    return render(request, 'board.html', context)

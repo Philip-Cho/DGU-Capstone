@@ -9,5 +9,6 @@ urlpatterns = [
     path('summary/', views.summary),
     path('keytext/', views.keytext),
     path('model/',views.model),
-    path('board/',views.board)
+    path('board/',views.board),
+    path('savedb/',views.savedb),
 ]

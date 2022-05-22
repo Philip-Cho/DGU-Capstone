@@ -43,6 +43,8 @@
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                     allowfullscreen></iframe>
                         </span>
+                        <button id="button_save" class="button" onclick="savedb()" type="button">4.저장
+                            </button>
                     </div>
                     <div class="box">
                     <div class="box">
@@ -209,6 +211,18 @@
             $('#answer').append(response.answer);
             $('#button3').hide();
             $('#button4').show();
+        });
+    }
+</script>
+
+<script>
+    function savedb() {
+        $.ajax({
+            url: 'http://127.0.0.1:8000/caffeine/savedb/',
+            method: 'POST',
+        }).then(function (response) {
+            $('#button_save').hide();
+            alert(response)
         });
     }
 </script>
