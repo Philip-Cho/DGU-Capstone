@@ -111,3 +111,8 @@ def keytext(request):
             "answer": key_dict["answer"]
         }
     return JsonResponse(result)
+
+
+@csrf_exempt
+def board(request):
+    return render(request, 'board.html')
