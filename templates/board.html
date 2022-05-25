@@ -43,7 +43,7 @@
 
                 {% if lecture_list %}
                 {% for lecture in lecture_list %}
-                <h2>{{ lecture.lecture_name}}</h2>
+                <a href="http://127.0.0.1:8000/caffeine/{{lecture.lecture_name}}/"> <h2>{{ lecture.lecture_name}}</h2></a>
                 <p>{{ lecture.lecture_url }}</p>
                 {% endfor %}
                 {% else %}

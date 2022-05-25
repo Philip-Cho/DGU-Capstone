@@ -35,8 +35,8 @@ class Users(AbstractUser):
 """    
 # 사용자별 강의 히스토리
 class LectureHistory(models.Model):
-    lecture_id = models.ForeignKey(Users, on_delete=models.CASCADE) # Users의 PK를 FK로 받음
-    lecture_name = models.CharField(max_length=255)
+    # lecture_id = models.ForeignKey(Users, on_delete=models.CASCADE) # Users의 PK를 FK로 받음
+    lecture_name = models.CharField(max_length=255, primary_key=True, null=False, default='')
     lecture_url = models.CharField(max_length=255)
     embed_url = models.CharField(max_length=255)
     lecture_note = models.TextField()
@@ -46,12 +46,12 @@ class LectureHistory(models.Model):
     update_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
-    class Meta:
-        constraints = [
-        models.UniqueConstraint(
-            fields=['lecture_id', 'lecture_name'], name='lecture_id_and_name'
-        )
-        ]
+    # class Meta:
+    #     constraints = [
+    #     models.UniqueConstraint(
+    #         fields=['lecture_id', 'lecture_name'], name='lecture_id_and_name'
+    #     )
+    #     ]
     
 # """
 # [LectureQuiz]

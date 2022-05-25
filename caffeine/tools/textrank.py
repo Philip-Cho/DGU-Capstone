@@ -107,16 +107,14 @@ def load_key_model():
     model = KeyBERT('all-MiniLM-L12-v2')
     return model
 
-def key_question(script_path, model):
+def key_question(text_all, model):
     sent_ngram = 2
     stopwords_path = 'text/stop_words_english.txt'
-    script_path = script_path
     print("키워드 추출 시작")
 
-    with open(script_path) as f:
-        text = f.read()
-        sentences = sent_tokenize(text)
-        sentences = [sent.replace('\n', ' ') for sent in sentences]
+    text = text_all
+    sentences = sent_tokenize(text)
+    sentences = [sent.replace('\n', ' ') for sent in sentences]
 
     with open(stopwords_path, 'r', encoding='utf-8') as f:
         stop_words = f.readlines()
