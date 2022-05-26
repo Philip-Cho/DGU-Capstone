@@ -35,7 +35,7 @@ sum_texts = list()
 
 ## 키워드 추출 변수
 models_key = list()
-
+hash_tags = list()
 ## 이미지 추출 변수
 code_imgs = list()
 
@@ -187,12 +187,14 @@ def keytext(request):  # 키워드 추출을 위한 메소드
 
         # 키워드 추출
         keywords = ''
+        hash_tag = ''
         count = 1
         for i in key_dict["keywords"]:
             keywords += str(count) + '순위 : ' + str(i) + '<br>'
+            hash_tag += '# ' + str(i) +',  '
             count += 1
         print(keywords)
-
+        hash_tags.append(hash_tag)
         # 웹으로 보낼 데이터
         result = {
             "keyword": keywords,
@@ -206,19 +208,21 @@ def keytext(request):  # 키워드 추출을 위한 메소드
 @csrf_exempt
 def savedb(request):  # DB 저장을 위한 메소드
     if request.method == 'POST':
-        ## user
-        # user = Users()
-        # user.id = "shim"
-        # user.save()
+        # user
+        user = Users()
+        user.id = "shim2"
+        user.username = "shimjongsoo"
+        user.save()
 
         ## history
         history = LectureHistory()
-        # history.lecture_id = get_object_or_404(Users, id="shim")
+        history.lecture_id = get_object_or_404(Users, id="shim2")
         history.lecture_name = movie_titles[-1]
         history.embed_url = embed_urls[-1]
         history.lecture_url = movie_urls[-1]
         history.lecture_note = text_alls[-1]
         history.lecture_sum = sum_texts[-1]
+        history.keyword = hash_tags[-1]
         history.update_at = timezone.now()
         history.created_at = timezone.now()
         history.save()
@@ -232,7 +236,7 @@ def board(request):  # 게시판 출력을 위한 메소드
 
     page = request.GET.get('page', '1')  # 페이지
 
-    question_list = LectureHistory.objects.order_by('lecture_name')
+    question_list = LectureHistory.objects.order_by('id')
     paginator = Paginator(question_list, 10)  # 페이지당 10개씩
     page_obj = paginator.get_page(page)
     context = {'lecture_list': page_obj}
@@ -240,9 +244,9 @@ def board(request):  # 게시판 출력을 위한 메소드
     return render(request, 'board.html', context)
 
 @csrf_exempt
-def history_result(request,lecture_name):  # 게시판 결과물을 위한 메소드
+def history_result(request,id):  # 게시판 결과물을 위한 메소드
 
-    history_lecture = get_object_or_404(LectureHistory, pk=lecture_name)
+    history_lecture = get_object_or_404(LectureHistory, pk=id)
     context = {'history_lecture': history_lecture}
 
     return render(request, 'history_result.html', context)

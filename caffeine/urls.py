@@ -11,5 +11,5 @@ urlpatterns = [
     path('model/',views.model),
     path('board/',views.board),
     path('savedb/',views.savedb),
-    path('<str:lecture_name>/', views.history_result),
+    path('<int:id>/', views.history_result),
 ]
