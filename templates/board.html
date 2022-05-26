@@ -42,14 +42,19 @@
                 <!--				새로운 컨텐츠 넣을 때 이 곳에 요소들을 추가한다. 나머지는 틀-->
                 <!--게시판 Table -->
                 <table>
+                    <thead>
+                        <tr>
+                            <th>강의 제목</th>
+                        </tr>
+                    </thead>
                 {% if lecture_list %}
                     {% for lecture in lecture_list %}
                     <tbody>
                     <tr>
-                        <td><a href="http://127.0.0.1:8000/caffeine/{{lecture.lecture_name}}/"><h4>{{ lecture.lecture_name}}</h4></a></td>
+                        <td><h5 style="margin: 0;"><a href="http://127.0.0.1:8000/caffeine/{{lecture.lecture_name}}/">{{ lecture.lecture_name}}</a></h5></td>
                     </tr>
                     <tr>
-                        <td><p>{{ lecture.lecture_url }}</p></td>
+                        <td>{{ lecture.lecture_url }}</td>
                     {% endfor %}
                     </tr>
                 {% else %}
