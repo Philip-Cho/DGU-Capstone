@@ -40,18 +40,25 @@
             <!--                content -->
             <section>
                 <!--				새로운 컨텐츠 넣을 때 이 곳에 요소들을 추가한다. 나머지는 틀-->
-
+                <!--게시판 Table -->
+                <table>
                 {% if lecture_list %}
-                {% for lecture in lecture_list %}
-                <a href="http://127.0.0.1:8000/caffeine/{{lecture.lecture_name}}/"> <h2>{{ lecture.lecture_name}}</h2></a>
-                <p>{{ lecture.lecture_url }}</p>
-                {% endfor %}
+                    {% for lecture in lecture_list %}
+                    <tbody>
+                    <tr>
+                        <td><a href="http://127.0.0.1:8000/caffeine/{{lecture.lecture_name}}/"><h4>{{ lecture.lecture_name}}</h4></a></td>
+                    </tr>
+                    <tr>
+                        <td><p>{{ lecture.lecture_url }}</p></td>
+                    {% endfor %}
+                    </tr>
                 {% else %}
                 <tr>
                     <td colspan="4">질문이 없습니다.</td>
                 </tr>
                 {% endif %}
-
+                    </tbody>
+                </table>
                 <!--            section content end-->
             </section>
             <!-- inner end -->
