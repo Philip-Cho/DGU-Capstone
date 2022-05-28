@@ -54,7 +54,7 @@
                         <td><h5 style="margin: 0;"><a href="http://127.0.0.1:8000/caffeine/{{lecture.id}}/">{{ lecture.lecture_name}}</a></h5></td>
                     </tr>
                     <tr>
-                        <td>{{ lecture.keyword }}  <p>저장 일시: {{ lecture.created_at }}</p></td>
+                        <td>{{ lecture.keyword }}  <p align="right">저장 일시: {{ lecture.created_at }}</p></td>
                     {% endfor %}
                     </tr>
                 {% else %}

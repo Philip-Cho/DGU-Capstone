@@ -41,11 +41,14 @@
             <section>
                 <!--				새로운 컨텐츠 넣을 때 이 곳에 요소들을 추가한다. 나머지는 틀-->
                 <h2>회원가입</h2>
-                <h4>{%if msg%}{{msg}}{%endif%}</h4>
+                <div class="alert alert-danger">
+                    {%if msg%}{{msg}}{%endif%}
+                </div>
                 <form method="post">
                     {% csrf_token %}{{form.as_p}}
                     <button type="submit">가입하기</button>
                 </form>
+
                 <a href="{% url 'index' %}">홈으로</a>
                 <!--            section content end-->
             </section>
