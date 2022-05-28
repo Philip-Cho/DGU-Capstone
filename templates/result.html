@@ -43,9 +43,16 @@
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                     allowfullscreen></iframe>
                         </span>
-                        <button id="button_save" class="button" onclick="savedb()" type="button">4.저장
-                            </button>
                     </div>
+<!--                    캡쳐 임시 위치(나중에 옮김)-->
+                    <div class="capture">
+                        <div>
+                            <div><kbd class="key">Ctrl</kbd> + <kbd class="key">V</kbd> in this window.</div>
+                            <img class="preview" id="preview" />
+                        </div>
+                    </div>
+
+<!--                    캡쳐 영역 끝-->
                     <div class="box">
                     <div class="box">
                         <div class="h-100 p-5 text-white bg-dark rounded-3">
@@ -133,6 +140,7 @@
                             <div id="answer" style="margin-left: 0px; display: none;"></div>
                         </div>
                     </div>
+                    <button id="button_save" class="button" onclick="savedb()" type="button">4.저장</button>
                 </div>
 <!--            section content end-->
                 </section>
@@ -240,4 +248,24 @@
     <script src="{% static 'js/util.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
 
+<script> //이미지 복사 스크립트
+            document.addEventListener('DOMContentLoaded', function () {
+                document.addEventListener('paste', function (evt) {
+                    const clipboardItems = evt.clipboardData.items;
+                    const items = [].slice.call(clipboardItems).filter(function (item) {
+                        // Filter the image items only
+                        return item.type.indexOf('image') !== -1;
+                    });
+                    if (items.length === 0) {
+                        return;
+                    }
+
+                    const item = items[0];
+                    const blob = item.getAsFile();
+
+                    const imageEle = document.getElementById('preview');
+                    imageEle.src = URL.createObjectURL(blob);
+                });
+            });
+</script>
 </html>
