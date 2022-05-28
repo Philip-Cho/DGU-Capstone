@@ -1,9 +1,10 @@
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.core.paginator import Paginator
 from django.utils import timezone
+from django.contrib.auth.forms import AuthenticationForm
 
 from caffeine.forms import RegisterForm
 
@@ -56,7 +57,7 @@ def model(request):  ## 모델 로드 페이지 (속도 개선 위해 임시)
     return HttpResponse("!!모델로드 완료!!")
 
 
-@csrf_exempt
+@csrf_exempt # @csrf_exempt: 사이트 간 위변조 방지 토큰
 def result(request):  # 결과물 페이지(주소 입력 -> STT,요약등 결과물 출력)
     if request.method == 'POST':
 
@@ -267,3 +268,24 @@ def register(request):
     else:
         form = RegisterForm()
         return render(request, 'register.html', {'form': form})
+
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, request.POST) # Django가 만들어 놓은 Form
+        msg = '가입되어 있지 않거나 로그인 정보가 잘못되었습니다.'
+        print(form.is_valid)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=raw_password)
+            if user is not None:
+                msg = 'login success!'
+                login(request, user)
+            return render(request, 'login.html', {'form': form, 'msg': msg})
+        else:
+            form = AuthenticationForm()
+            return render(request, 'login.html', {'form': form})
+        
+def logout_view(request):
+    logout(request)
+    return redirect('index')
