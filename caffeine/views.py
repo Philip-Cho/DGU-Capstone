@@ -87,9 +87,17 @@ def result(request):  # 결과물 페이지(주소 입력 -> STT,요약등 결�
 
 # 메인페이지 강의 추천을 위한 DB READ
 def recommandataion():
+    top3 = {}
+    # lecture_name에 따라 count를 한 후 
+    video_views = LectureHistory().objects.valeus('lecture_name').annoate(num_lecture = Count('lecture_name')).order_by('-num_lecture')
+    # 가장 많은 제목의 강의들의 강의명과 링크를 반환
+    lec_name = video_views[:3].get('lecture_name')
+    lec_url = video_views[:3].get('lecture_url')
     
-    
+    for k, v in zip(lec_name, lec_url):
+        top3[k] = v
 
+    return top3
 
 @csrf_exempt
 def text(request):  # STT 버튼 호출시 실행
