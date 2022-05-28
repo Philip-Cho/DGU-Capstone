@@ -276,15 +276,17 @@ def login_view(request):
         print(form.is_valid)
         if form.is_valid():
             username = form.cleaned_data.get('username')
+            # id = form.cleaned_data.get('id')
             raw_password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=raw_password)
+            # user = authenticate(id=id, password=raw_password)
             if user is not None:
                 msg = 'login success!'
                 login(request, user)
-            return render(request, 'login.html', {'form': form, 'msg': msg})
-        else:
-            form = AuthenticationForm()
-            return render(request, 'login.html', {'form': form})
+        return render(request, 'login.html', {'form': form, 'msg': msg})
+    else:
+        form = AuthenticationForm()
+        return render(request, 'login.html', {'form': form})
         
 def logout_view(request):
     logout(request)
