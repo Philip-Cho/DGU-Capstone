@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.88.1">
-    <title>카페인 수혈 결과물 페이지</title>
+    <title>카페인 수혈 강의 히스토리 페이지</title>
 <!--    아이콘을 위한 링크 -->
     <link href="{% static 'css/main.css' %}" rel="stylesheet">
     <script src="https://kit.fontawesome.com/acbb32aeb8.js" crossorigin="anonymous"></script>
@@ -25,7 +25,7 @@
             <div class="inner">
                 <!-- Header -->
                 <header id="header">
-                                        <a href="http://127.0.0.1:8000/caffeine/result/" class="logo"><strong>Result Page</strong> by Caffeine Intoxication</a>
+                                        <a href="http://127.0.0.1:8000/caffeine/result/" class="logo"><strong>History Page</strong> by Caffeine Intoxication</a>
                     <ul class="icons">
                         <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
                         <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
@@ -37,69 +37,30 @@
                 <section>
                     <div class="container-fluid py-5">
                         <span id="video">
-                            <h2> Lecture Name : {{ movie_title }}  </h2>
-                            <iframe width="100%" height="500" src={{ embed_url }} title = "YouTube video player"
+                            <h2> Lecture Name : {{ history_lecture.lecture_name }}  </h2>
+                            <iframe width="100%" height="500" src={{ history_lecture.embed_url }} title = "YouTube video player"
                                     frameborder="0"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                     allowfullscreen></iframe>
                         </span>
-                        <button id="button_save" class="button" onclick="savedb()" type="button">4.저장
-                            </button>
                     </div>
                     <div class="box">
                     <div class="box">
                         <div class="h-100 p-5 text-white bg-dark rounded-3">
                             <h2>강의 전문</h2>
-                            <div id="loading1" style="margin-left: 0px; display: none;">
-                                <h4>강의 전문 추출중...</h4>
+
+                            <div id="textall" style="margin-left: 0px;">
+                                {{ history_lecture.lecture_note }}
                             </div>
-                            <div id="textall" style="margin-left: 0px; display: none;">
-                            </div>
-                            <button id="button1" class="button" onclick="text()" type="button">1. 동영상
-                                STT 추출
-                            </button>
-                            <script>
-                                function text() {
-                                    $('#loading1').show();
-                                    $.ajax({
-                                        url: 'http://127.0.0.1:8000/caffeine/text/',
-                                        method: 'POST',
-                                    }).then(function (response) {
-                                        $('#loading1').hide();
-                                        $('#textall').show();
-                                        $('#textall').html(response.text_all);
-                                        $('#button1').hide();
-                                    });
-                                }
-                            </script>
                         </div>
                     </div>
 
                     <div class="box">
                         <div class="h-100 p-5 text-white bg-dark rounded-3">
                             <h2>강의 요약</h2>
-                            <div id="loading2" style="margin-left: 0px; display: none;">
-                                <h4>강의 요약중...</h4>
+                            <div id="sumall" style="margin-left: 0px;">
+                                {{ history_lecture.lecture_sum }}
                             </div>
-                            <div id="sumall" style="margin-left: 0px; display: none;">
-                            </div>
-                            <button id="button2" class="button" onclick="summary()"
-                                    type="button">2. 요약본 추출
-                            </button>
-                            <script>
-                                function summary() {
-                                    $('#loading2').show();
-                                    $.ajax({
-                                        url: 'http://127.0.0.1:8000/caffeine/summary/',
-                                        method: 'POST',
-                                    }).then(function (response) {
-                                        $('#loading2').hide();
-                                        $('#sumall').show();
-                                        $('#sumall').html(response.sum_text);
-                                        $('#button2').hide();
-                                    });
-                                }
-                            </script>
                         </div>
                     </div>
                 </div>

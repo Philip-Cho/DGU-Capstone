@@ -3,10 +3,12 @@ from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import login, authenticate
 from django.core.paginator import Paginator
+from django.utils import timezone
 
 from caffeine.forms import RegisterForm
 
 import os, os.path
+
 
 from .tools.down_movie import downYoutubeMp3, down_title
 from .tools.stt import upload_blob_from_memory, transcribe_gcs
@@ -29,10 +31,11 @@ text_alls = list()
 ## 요약 변수
 models_sum = list()
 tokens_sum = list()
+sum_texts = list()
 
 ## 키워드 추출 변수
 models_key = list()
-
+hash_tags = list()
 ## 이미지 추출 변수
 code_imgs = list()
 
@@ -165,6 +168,7 @@ def summary(request):  ## 요약문 생성 버튼을 위한 메소드
         sum_text = summary_text(text_alls[-1], models_sum[-1], tokens_sum[-1])
         print(sum_text)
 
+        sum_texts.append(sum_text)
         # 웹으로 보낼 데이터
         result = {
             "sum_text": sum_text
@@ -176,20 +180,21 @@ def summary(request):  ## 요약문 생성 버튼을 위한 메소드
 def keytext(request):  # 키워드 추출을 위한 메소드
     if request.method == 'POST':
 
-        # path 설정
-        path = os.getcwd()
-        folder_text = "text"
-        text_file = contents[-1] + ".txt"
-        key_dict = key_question(os.path.join(path, folder_text, text_file), models_key[-1])
+        # 키버트 활용
+        text_re = request.POST['text']
+        print(text_re)
+        key_dict = key_question(text_re, models_key[-1])
 
         # 키워드 추출
         keywords = ''
+        hash_tag = ''
         count = 1
         for i in key_dict["keywords"]:
             keywords += str(count) + '순위 : ' + str(i) + '<br>'
+            hash_tag += '# ' + str(i) +',  '
             count += 1
         print(keywords)
-
+        hash_tags.append(hash_tag)
         # 웹으로 보낼 데이터
         result = {
             "keyword": keywords,
@@ -203,17 +208,23 @@ def keytext(request):  # 키워드 추출을 위한 메소드
 @csrf_exempt
 def savedb(request):  # DB 저장을 위한 메소드
     if request.method == 'POST':
-        ## user
+        # user
         user = Users()
-        user.id = "shim"
+        user.id = "shim2"
+        user.username = "shimjongsoo"
         user.save()
 
         ## history
         history = LectureHistory()
-        history.lecture_id = get_object_or_404(Users, id="shim")
+        history.lecture_id = get_object_or_404(Users, id="shim2")
         history.lecture_name = movie_titles[-1]
         history.embed_url = embed_urls[-1]
         history.lecture_url = movie_urls[-1]
+        history.lecture_note = text_alls[-1]
+        history.lecture_sum = sum_texts[-1]
+        history.keyword = hash_tags[-1]
+        history.update_at = timezone.now()
+        history.created_at = timezone.now()
         history.save()
 
     # 요약본 출력
@@ -225,12 +236,20 @@ def board(request):  # 게시판 출력을 위한 메소드
 
     page = request.GET.get('page', '1')  # 페이지
 
-    question_list = LectureHistory.objects.order_by('lecture_name')
+    question_list = LectureHistory.objects.order_by('id')
     paginator = Paginator(question_list, 10)  # 페이지당 10개씩
     page_obj = paginator.get_page(page)
     context = {'lecture_list': page_obj}
 
     return render(request, 'board.html', context)
+
+@csrf_exempt
+def history_result(request,id):  # 게시판 결과물을 위한 메소드
+
+    history_lecture = get_object_or_404(LectureHistory, pk=id)
+    context = {'history_lecture': history_lecture}
+
+    return render(request, 'history_result.html', context)
 
 
 def register(request):

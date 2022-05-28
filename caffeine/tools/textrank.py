@@ -62,7 +62,6 @@ def get_keysents(sorted_sent_idx, sentences, sent_num=2):
 
     return keysents
 
-
 # 6) Final: Get the sentence with blank, answer sentence, answer word
 def keysents_blank(keywords: list, keysents: list):
     keysent = ''  # blank 만들 keysent
@@ -93,20 +92,29 @@ def keysents_blank(keywords: list, keysents: list):
     print("키워드 추출 완료")
     return {'keywords': keywords, 'sentence_blank': keysent_blank, 'sentence': keysent, 'answer': keyword_keysent}
 
+def postprocess_keywords(keywords):
+    for kw in keywords:
+        if len(kw)<5 or kw not in keywords:
+            continue
+        idx = keywords.index(kw)
+        n_gram = int(len(kw)*0.8)   # n_gram: 단어의 80% 이상 겹치면 out
+        window = [kw[i:i+n_gram] for i in range(len(kw)-n_gram+1)]
+        for w in window:
+            keywords = keywords[:idx+1] + [keyword for keyword in keywords[idx+1:] if w not in keyword]
+    return keywords[:10]
+
 def load_key_model():
     model = KeyBERT('all-MiniLM-L12-v2')
     return model
 
-def key_question(script_path, model):
+def key_question(text_all, model):
     sent_ngram = 2
     stopwords_path = 'text/stop_words_english.txt'
-    script_path = script_path
     print("키워드 추출 시작")
 
-    with open(script_path) as f:
-        text = f.read()
-        sentences = sent_tokenize(text)
-        sentences = [sent.replace('\n', ' ') for sent in sentences]
+    text = text_all
+    sentences = sent_tokenize(text)
+    sentences = [sent.replace('\n', ' ') for sent in sentences]
 
     with open(stopwords_path, 'r', encoding='utf-8') as f:
         stop_words = f.readlines()
@@ -122,6 +130,7 @@ def key_question(script_path, model):
     kw_model = model
     keywords_weight = get_keywords(text, kw_model, 10, stop_words)
     keywords = [word_tup[0] for word_tup in keywords_weight]
+    keywords = postprocess_keywords(keywords)  # 복수/단수 or 동사/명사 차이의 유사도 높은 단어 처리
 
     return keysents_blank(keywords, keysents)
 
