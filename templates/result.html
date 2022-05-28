@@ -256,23 +256,29 @@
     <script src="{% static 'js/main.js' %}"></script>
 
 <script> //이미지 복사 스크립트
-            document.addEventListener('DOMContentLoaded', function () {
-                document.addEventListener('paste', function (evt) {
-                    const clipboardItems = evt.clipboardData.items;
-                    const items = [].slice.call(clipboardItems).filter(function (item) {
-                        // Filter the image items only
-                        return item.type.indexOf('image') !== -1;
-                    });
-                    if (items.length === 0) {
-                        return;
-                    }
-
-                    const item = items[0];
-                    const blob = item.getAsFile();
-
-                    const imageEle = document.getElementById('preview');
-                    imageEle.src = URL.createObjectURL(blob);
-                });
+    document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('paste', function (evt) {
+            const clipboardItems = evt.clipboardData.items;
+            const items = [].slice.call(clipboardItems).filter(function (item) {
+                // Filter the image items only
+                return item.type.indexOf('image') !== -1;
             });
+            if (items.length === 0) {
+                return;
+            }
+
+            const item = items[0];
+            const blob = item.getAsFile();
+
+            const imageEle = document.getElementById('preview');
+            imageEle.src = URL.createObjectURL(blob);
+            let link = document.createElement('a');
+            link.download = 'example.png';
+
+            link.href = URL.createObjectURL(blob);
+            link.click();
+
+        });
+    });
 </script>
 </html>
