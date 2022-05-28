@@ -271,15 +271,14 @@ def register(request):
 
 def login_view(request):
     if request.method == 'POST':
+        # 유저 존재하는지 검증
         form = AuthenticationForm(request, request.POST) # Django가 만들어 놓은 Form
         msg = '가입되어 있지 않거나 로그인 정보가 잘못되었습니다.'
         print(form.is_valid)
         if form.is_valid():
             username = form.cleaned_data.get('username')
-            # id = form.cleaned_data.get('id')
             raw_password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=raw_password)
-            # user = authenticate(id=id, password=raw_password)
             if user is not None:
                 msg = 'login success!'
                 login(request, user)

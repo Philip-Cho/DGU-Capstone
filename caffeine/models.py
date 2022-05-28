@@ -21,7 +21,9 @@ from django.contrib.auth.models import AbstractUser
 
 # 유저
 class Users(AbstractUser):
-    id = models.CharField(max_length=20, primary_key=True, null=False, default='')
+    username = models.CharField(max_length=20, primary_key=True, null=False, default='')
+    full_name = models.CharField(max_length=20, null=False)
+    # id = models.CharField(max_length=20, primary_key=True, null=False, default='')
     # password = models.CharField(max_length=20, null=False)
     # name = models.CharField(max_length=20, null=False)
     # email = models.EmailField(max_length=40, null=False)
