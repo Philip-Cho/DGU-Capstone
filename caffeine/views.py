@@ -85,6 +85,11 @@ def result(request):  # 결과물 페이지(주소 입력 -> STT,요약등 결�
         }
     return render(request, 'result.html', context)
 
+# 메인페이지 강의 추천을 위한 DB READ
+def recommandataion():
+    
+    
+
 
 @csrf_exempt
 def text(request):  # STT 버튼 호출시 실행
@@ -252,7 +257,7 @@ def history_result(request,id):  # 게시판 결과물을 위한 메소드
 
     return render(request, 'history_result.html', context)
 
-
+# 회원가입
 def register(request):
     if request.method == "POST":
         form = RegisterForm(request.POST)
@@ -269,6 +274,7 @@ def register(request):
         form = RegisterForm()
         return render(request, 'register.html', {'form': form})
 
+# 로그인
 def login_view(request):
     if request.method == 'POST':
         # 유저 존재하는지 검증
@@ -287,6 +293,7 @@ def login_view(request):
         form = AuthenticationForm()
         return render(request, 'login.html', {'form': form})
         
+# 로그아웃
 def logout_view(request):
     logout(request)
     return redirect('index')
