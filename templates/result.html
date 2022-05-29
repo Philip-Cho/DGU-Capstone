@@ -303,6 +303,8 @@
                 type : blob.type,
             });
 
+            {#imgpost(myFile);#}
+
             // 내 컴퓨터에 다운 받는 방법
             let link = document.createElement('a');
             link.download = filename;
@@ -313,4 +315,15 @@
         });
     });
 </script>
+
+<script>
+    function imgpost(file) {
+        $.ajax({
+            url: 'http://127.0.0.1:8000/caffeine/imgpost/',
+            method: 'POST',
+            data : {"img": file}
+        });
+    }
+</script>
+
 </html>

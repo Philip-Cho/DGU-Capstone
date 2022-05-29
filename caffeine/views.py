@@ -134,6 +134,14 @@ def text(request):  # STT 버튼 호출시 실행
 
     return JsonResponse(gen)
 
+@csrf_exempt
+def imgpost(request):
+    if request.method == 'POST':
+        print(request.POST['img'])
+
+    return HttpResponse("이미지 불러오기")
+
+
 
 # codes 폴더에 있는 모든 이미지 캡처 순서대로 정렬 후 불러오기
 @csrf_exempt
@@ -287,7 +295,7 @@ def register(request):
             user = authenticate(username=username, password=raw_password)
             login(request, user)
             msg = '회원가입 완료!'
-        return render(request, 'register.html', {'form': form, 'msg': msg})
+        return render(request, 'index.html', {'form': form, 'msg': msg})
     else:
         form = RegisterForm()
         return render(request, 'register.html', {'form': form})
@@ -306,7 +314,7 @@ def login_view(request):
             if user is not None:
                 msg = 'login success!'
                 login(request, user)
-        return render(request, 'login.html', {'form': form, 'msg': msg})
+        return render(request, 'index.html', {'form': form, 'msg': msg})
     else:
         form = AuthenticationForm()
         return render(request, 'login.html', {'form': form})
