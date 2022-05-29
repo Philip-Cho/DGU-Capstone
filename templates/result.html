@@ -8,59 +8,62 @@
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.88.1">
     <title>카페인 수혈 결과물 페이지</title>
-<!--    아이콘을 위한 링크 -->
+    <!--    아이콘을 위한 링크 -->
     <link href="{% static 'css/main.css' %}" rel="stylesheet">
     <script src="https://kit.fontawesome.com/acbb32aeb8.js" crossorigin="anonymous"></script>
-<!--    한글 폰트-->
+    <!--    한글 폰트-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
 
 </head>
 <body class="is-preload">
 <!-- Wrapper -->
-    <div id="wrapper">
-        <!-- Main -->
-        <div id="main">
-            <div class="inner">
-                <!-- Header -->
-                <header id="header">
-                                        <a href="http://127.0.0.1:8000/caffeine/result/" class="logo"><strong>Result Page</strong> by Caffeine Intoxication</a>
-                    <ul class="icons">
-                        <li class="nav-item">
+<div id="wrapper">
+    <!-- Main -->
+    <div id="main">
+        <div class="inner">
+            <!-- Header -->
+            <header id="header">
+                <a href="http://127.0.0.1:8000/caffeine/result/" class="logo"><strong>Result Page</strong> by Caffeine
+                    Intoxication</a>
+                <ul class="icons">
+                    <li class="nav-item">
                         {% if user.is_authenticated %}
-                        <a class="nav-link" href="{% url 'logout' %}">{{ user.username }} (로그아웃)</a>
+                            <a class="nav-link" href="{% url 'logout' %}">{{ user.username }} (로그아웃)</a>
                         {% else %}
-                        <a class="nav-link" href="{% url 'login' %}">로그인</a>
+                            <a class="nav-link" href="{% url 'login' %}">로그인</a>
                         {% endif %}
-                        </li>
-                        <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-                        <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-                        <li><a href="#" class="icon brands fa-snapchat-ghost"><span class="label">Snapchat</span></a></li>
-                        <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-                    </ul>
-                </header>
-<!--                content -->
-                <section>
-                    <div class="container-fluid py-5">
+                    </li>
+                    <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+                    <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+                    <li><a href="#" class="icon brands fa-snapchat-ghost"><span class="label">Snapchat</span></a></li>
+                    <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+                </ul>
+            </header>
+            <!--                content -->
+            <section>
+                <div class="container-fluid py-5">
                         <span id="video">
                             <h2> Lecture Name : {{ movie_title }}  </h2>
-                            <iframe width="100%" height="500" src={{ embed_url }} title = "YouTube video player"
+                            <iframe id="youtube" width="100%" height="500" src={{ embed_url }} title = "YouTube video player"
                                     frameborder="0"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                     allowfullscreen></iframe>
-                        </span>
-                    </div>
-<!--                    은진 캡쳐 임시 위치(나중에 옮김)-->
-<!--                    <div class="capture">-->
-<!--                        <div>-->
-<!--                            <div><kbd class="key">Ctrl</kbd> + <kbd class="key">V</kbd> in this window.</div>-->
-<!--                            <img class="preview" id="preview" />-->
-<!--                        </div>-->
-<!--                    </div>-->
+                            <button id="cpature_button" class="button" onclick="getxy()" type="button">캡쳐
 
-<!--                    캡쳐 영역 끝-->
-                    <div class="box">
+                        </span>
+                </div>
+                <!--                    은진 캡쳐 임시 위치(나중에 옮김)-->
+                <!--                    <div class="capture">-->
+                <!--                        <div>-->
+                <!--                            <div><kbd class="key">Ctrl</kbd> + <kbd class="key">V</kbd> in this window.</div>-->
+                <!--                            <img class="preview" id="preview" />-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+
+                <!--                    캡쳐 영역 끝-->
+                <div class="box">
                     <div class="box">
                         <div class="h-100 p-5 text-white bg-dark rounded-3">
                             <h2>강의 전문</h2>
@@ -149,24 +152,24 @@
                     </div>
                     <button id="button_save" class="button" onclick="savedb()" type="button">4.저장</button>
                 </div>
-<!--            section content end-->
-                </section>
-        <!-- inner end -->
+                <!--            section content end-->
+            </section>
+            <!-- inner end -->
         </div>
-    <!--main end-->
+        <!--main end-->
     </div>
-<!--        side bar start-->
-<div id="sidebar">
-    <div class="inner">
+    <!--        side bar start-->
+    <div id="sidebar">
+        <div class="inner">
 
-        <!-- Search -->
+            <!-- Search -->
             <section id="search" class="alt">
                 <form method="post" action="#">
-                    <input type="text" name="query" id="query" placeholder="Search" />
+                    <input type="text" name="query" id="query" placeholder="Search"/>
                 </form>
             </section>
 
-        <!-- Menu -->
+            <!-- Menu -->
             <nav id="menu">
                 <header class="major">
                     <h2>Menu</h2>
@@ -179,7 +182,7 @@
                 </ul>
             </nav>
 
-        <!-- Section -->
+            <!-- Section -->
             <section>
                 <header class="major">
                     <h2>Get in touch</h2>
@@ -188,21 +191,22 @@
                 <ul class="contact">
                     <li class="icon solid fa-envelope"><a href="#">information@caffeine.ac.kr</a></li>
                     <li class="icon solid fa-phone">(010) 1234-5678</li>
-                    <li class="icon solid fa-home">30, Pildong-ro 1-gil, Jung-gu, Seoul, Republic of Korea<br />
-                    02-2260-0000</li>
+                    <li class="icon solid fa-home">30, Pildong-ro 1-gil, Jung-gu, Seoul, Republic of Korea<br/>
+                        02-2260-0000
+                    </li>
                 </ul>
             </section>
 
-        <!-- Footer -->
+            <!-- Footer -->
             <footer id="footer">
                 <p class="copyright">&copy; Caffeine. All rights reserved.
-                </br>Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+                    </br>Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
             </footer>
-<!--inner end-->
+            <!--inner end-->
+        </div>
+        <!--    sidebar end-->
     </div>
-<!--    sidebar end-->
-</div>
-<!--wrapper end-->
+    <!--wrapper end-->
 </div>
 
 </body>
@@ -215,7 +219,7 @@
         $.ajax({
             url: 'http://127.0.0.1:8000/caffeine/keytext/',
             method: 'POST',
-            data : {'text': $('#textall').html() }
+            data: {'text': $('#textall').html()}
         }).then(function (response) {
             $('#loading3').hide();
             $('#loading4').hide();
@@ -241,6 +245,36 @@
             alert(response)
         });
     }
+
+
+    function getxy() {
+
+        var target = document.getElementById("youtube");
+
+        var y_up = window.pageYOffset + target.getBoundingClientRect().top;
+        var y_down = window.pageYOffset + target.getBoundingClientRect().bottom;
+        var x_left = target.getBoundingClientRect().left;
+        var x_right = target.getBoundingClientRect().right;
+
+        // var y_up = target.getBoundingClientRect().top;
+        // var y_down = target.getBoundingClientRect().bottom;
+        // var x_left = target.getBoundingClientRect().left;
+        // var x_right = target.getBoundingClientRect().right;
+
+        // let y_up = $('#youtube').offset().top;
+        // let y_down = $('#youtube').offset().top + $('#youtube').outerHeight();
+        // let x_right = $('#youtube').offset().left + $('#youtube').outerWidth();
+        // let x_left = $('#youtube').offset().left;
+        console.log(window.pageYOffset, x_left, y_up, x_right, y_down);
+        $.ajax({
+            url: 'http://127.0.0.1:8000/caffeine/capture/',
+            method: 'POST',
+            data: {'x_left': x_left, 'y_up': y_up, 'x_right': x_right, 'y_down': y_down}
+        }).then(function (response) {
+            alert(response)
+        });
+
+    }
 </script>
 
 <script>
@@ -249,11 +283,11 @@
         $('#button4').hide();
     }
 </script>
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'js/browser.min.js' %}"></script>
-    <script src="{% static 'js/breakpoints.min.js' %}"></script>
-    <script src="{% static 'js/util.js' %}"></script>
-    <script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/browser.min.js' %}"></script>
+<script src="{% static 'js/breakpoints.min.js' %}"></script>
+<script src="{% static 'js/util.js' %}"></script>
+<script src="{% static 'js/main.js' %}"></script>
 
 <!--<script> //이미지 복사 스크립트-->
 <!--    document.addEventListener('DOMContentLoaded', function () {-->
@@ -326,5 +360,6 @@
 <!--        })-->
 <!--    }-->
 <!--</script>-->
+
 
 </html>

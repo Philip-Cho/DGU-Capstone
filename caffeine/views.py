@@ -9,7 +9,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from caffeine.forms import RegisterForm
 
 import os, os.path
-
+import pyautogui
 
 from .tools.down_movie import downYoutubeMp3, down_title
 from .tools.stt import upload_blob_from_memory, transcribe_gcs
@@ -134,12 +134,29 @@ def text(request):  # STT 버튼 호출시 실행
 
     return JsonResponse(gen)
 
-@csrf_exempt
-def imgpost(request):
-    if request.method == 'POST':
-        print(request.POST['img'])
+# @csrf_exempt
+# def imgpost(request):
+#     if request.method == 'POST':
+#         print(request.POST['img'])
+#
+#     return HttpResponse("이미지 불러오기")
 
-    return HttpResponse("이미지 불러오기")
+# 이미지 캡쳐
+@csrf_exempt
+def capture(request):
+    if request.method == 'POST':
+
+        count = 1
+        # 좌표값
+        x_left = float(request.POST['x_left'])
+        y_up = float(request.POST['y_up'])
+        x_right = float(request.POST['x_right'])
+        y_down = float(request.POST['y_down'])
+
+        print(x_left,y_up,x_right,y_down)
+        pyautogui.screenshot('./img/{}.png'.format(count),region=(x_left,y_up,x_right,y_down))
+
+    return HttpResponse("캡쳐완료")
 
 
 
