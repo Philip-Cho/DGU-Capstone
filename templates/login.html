@@ -55,7 +55,7 @@
                             <input type="text" class="form-control" name="username" id="username" style="width:30%; margin: auto;"
                                    value="{{ form.username.value|default_if_none:'' }}">
                             <label for="password">비밀번호</label>
-                            <input type="text" class="form-control" name="password" id="password" style="width:30%; margin: auto"
+                            <input type="password" class="form-control" name="password" id="password" style="width:30%; margin: auto"
                                    value="{{ form.password.value|default_if_none:'' }}">
 
                             <button type="submit" class = 'button' style="margin-top: 3%; width:15%;">로그인</button>
