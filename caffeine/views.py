@@ -20,6 +20,8 @@ from .tools.textrank import key_question, load_key_model
 from .models import LectureHistory
 from .models import Users
 
+from django.contrib import messages
+
 ## 강의 기본 정보 변수
 contents = list()
 movie_urls = list()
@@ -101,6 +103,9 @@ def recommandataion():
 
 @csrf_exempt
 def text(request):  # STT 버튼 호출시 실행
+    
+    messages.add_message(request, messages.INFO, '성택이 짱~')
+    
     if request.method == 'POST':
 
         # 동영상 다운
