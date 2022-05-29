@@ -51,13 +51,13 @@
                                     allowfullscreen></iframe>
                         </span>
                     </div>
-<!--                    캡쳐 임시 위치(나중에 옮김)-->
-                    <div class="capture">
-                        <div>
-                            <div><kbd class="key">Ctrl</kbd> + <kbd class="key">V</kbd> in this window.</div>
-                            <img class="preview" id="preview" />
-                        </div>
-                    </div>
+<!--                    은진 캡쳐 임시 위치(나중에 옮김)-->
+<!--                    <div class="capture">-->
+<!--                        <div>-->
+<!--                            <div><kbd class="key">Ctrl</kbd> + <kbd class="key">V</kbd> in this window.</div>-->
+<!--                            <img class="preview" id="preview" />-->
+<!--                        </div>-->
+<!--                    </div>-->
 
 <!--                    캡쳐 영역 끝-->
                     <div class="box">
@@ -255,75 +255,76 @@
     <script src="{% static 'js/util.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
 
-<script> //이미지 복사 스크립트
-    document.addEventListener('DOMContentLoaded', function () {
-        document.addEventListener('paste', function (evt) {
-            const clipboardItems = evt.clipboardData.items;
-            const items = [].slice.call(clipboardItems).filter(function (item) {
-                // Filter the image items only
-                return item.type.indexOf('image') !== -1;
-            });
-            if (items.length === 0) {
-                return;
-            }
+<!--<script> //이미지 복사 스크립트-->
+<!--    document.addEventListener('DOMContentLoaded', function () {-->
+<!--        document.addEventListener('paste', function (evt) {-->
+<!--            const clipboardItems = evt.clipboardData.items;-->
+<!--            const items = [].slice.call(clipboardItems).filter(function (item) {-->
+<!--                // Filter the image items only-->
+<!--                return item.type.indexOf('image') !== -1;-->
+<!--            });-->
+<!--            if (items.length === 0) {-->
+<!--                return;-->
+<!--            }-->
 
-            const item = items[0];
-            const blob = item.getAsFile();
+<!--            const item = items[0];-->
+<!--            const blob = item.getAsFile();-->
 
-            const imageEle = document.getElementById('preview');
-            imageEle.src = URL.createObjectURL(blob);
+<!--            const imageEle = document.getElementById('preview');-->
+<!--            imageEle.src = URL.createObjectURL(blob);-->
 
-            //unique한 파일명을 위한 날짜 생성 함수 date to str
-            Date.prototype.YYYYMMDDHHMMSS = function(){
-                var yyyy = this.getFullYear().toString();
-                var MM = pad(this.getMonth() + 1,2);
-                var dd = pad(this.getDate(), 2);
-                var hh = pad(this.getHours(), 2);
-                var mm = pad(this.getMinutes(), 2);
-                var ss = pad(this.getSeconds(), 2);
+<!--            //unique한 파일명을 위한 날짜 생성 함수 date to str-->
+<!--            Date.prototype.YYYYMMDDHHMMSS = function(){-->
+<!--                var yyyy = this.getFullYear().toString();-->
+<!--                var MM = pad(this.getMonth() + 1,2);-->
+<!--                var dd = pad(this.getDate(), 2);-->
+<!--                var hh = pad(this.getHours(), 2);-->
+<!--                var mm = pad(this.getMinutes(), 2);-->
+<!--                var ss = pad(this.getSeconds(), 2);-->
 
-                return (yyyy + mm + dd + hh + mm + ss );
-            };
+<!--                return (yyyy + mm + dd + hh + mm + ss );-->
+<!--            };-->
 
-            function pad(number, length) {
-                var str = '' + number;
-                while (str.length<length){
-                    str = '0' + str;
-                }
-                return str;
-            }
+<!--            function pad(number, length) {-->
+<!--                var str = '' + number;-->
+<!--                while (str.length<length){-->
+<!--                    str = '0' + str;-->
+<!--                }-->
+<!--                return str;-->
+<!--            }-->
 
-            var nowDate = new Date().YYYYMMDDHHMMSS();
-            var filename = nowDate + '.jpeg';
-            blob.name = filename;
-            //날짜 끝
+<!--            var nowDate = new Date().YYYYMMDDHHMMSS();-->
+<!--            var filename = nowDate + '.jpeg';-->
+<!--            blob.name = filename;-->
+<!--            //날짜 끝-->
 
-            //blob -> file 객체 생성 (저장 필요..)
-            const myFile = new File( [blob], filename, {
-                type : blob.type,
-            });
+<!--            //blob -> file 객체 생성 (저장 필요..)-->
+<!--            const myFile = new File( [blob], filename, {-->
+<!--                type : blob.type,-->
+<!--            });-->
 
-            {#imgpost(myFile);#}
+<!--            // {#imgpost(myFile);#}-->
+<!--            imgpost(myFile);-->
 
-            // 내 컴퓨터에 다운 받는 방법
-            let link = document.createElement('a');
-            link.download = filename;
-            link.href = URL.createObjectURL(blob);
-            link.click();
-            // 내 컴퓨터 다운 끝
+<!--            // 내 컴퓨터에 다운 받는 방법-->
+<!--            let link = document.createElement('a');-->
+<!--            link.download = filename;-->
+<!--            link.href = URL.createObjectURL(blob);-->
+<!--            link.click();-->
+<!--            // 내 컴퓨터 다운 끝-->
 
-        });
-    });
-</script>
+<!--        });-->
+<!--    });-->
+<!--</script>-->
 
-<script>
-    function imgpost(file) {
-        $.ajax({
-            url: 'http://127.0.0.1:8000/caffeine/imgpost/',
-            method: 'POST',
-            data : {"img": file}
-        });
-    }
-</script>
+<!--<script>-->
+<!--    function imgpost(file) {-->
+<!--        $.ajax({-->
+<!--            url: 'http://127.0.0.1:8000/caffeine/imgpost/',-->
+<!--            method: 'POST',-->
+<!--            data : {"img": file}-->
+<!--        })-->
+<!--    }-->
+<!--</script>-->
 
 </html>
