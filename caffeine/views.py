@@ -230,37 +230,34 @@ def keytext(request):  # 키워드 추출을 위한 메소드
 @csrf_exempt
 def savedb(request):  # DB 저장을 위한 메소드
     if request.method == 'POST':
-        # user
-        user = Users()
-        user.id = "shim2"
-        user.username = "shimjongsoo"
-        user.save()
+        if request.user.is_authenticated:
+            print(request.user)
+            ## history
+            history = LectureHistory()
+            history.lecture_id = get_object_or_404(Users, username=request.user)
+            try:
+                history.lecture_name = movie_titles[-1]
+                history.embed_url = embed_urls[-1]
+                history.lecture_url = movie_urls[-1]
+                history.lecture_note = text_alls[-1]
+                history.lecture_sum = sum_texts[-1]
+                history.keyword = hash_tags[-1]
+                history.update_at = timezone.now()
+                history.created_at = timezone.now()
+            except:
+                history.lecture_name = movie_titles[-1]
+                history.embed_url = embed_urls[-1]
+                history.lecture_url = movie_urls[-1]
+                history.lecture_note = " "
+                history.lecture_sum = " "
+                history.keyword = " "
+                history.update_at = timezone.now()
+                history.created_at = timezone.now()
+            history.save()
+            return HttpResponse("!!DB 저장 완료!!")
+        else:
+            return HttpResponse("!!로그인 필요!!")
 
-        ## history
-        history = LectureHistory()
-        history.lecture_id = get_object_or_404(Users, id="shim2")
-        try:
-            history.lecture_name = movie_titles[-1]
-            history.embed_url = embed_urls[-1]
-            history.lecture_url = movie_urls[-1]
-            history.lecture_note = text_alls[-1]
-            history.lecture_sum = sum_texts[-1]
-            history.keyword = hash_tags[-1]
-            history.update_at = timezone.now()
-            history.created_at = timezone.now()
-        except:
-            history.lecture_name = movie_titles[-1]
-            history.embed_url = embed_urls[-1]
-            history.lecture_url = movie_urls[-1]
-            history.lecture_note = " "
-            history.lecture_sum = " "
-            history.keyword = " "
-            history.update_at = timezone.now()
-            history.created_at = timezone.now()
-        history.save()
-
-    # 요약본 출력
-    return HttpResponse("!!DB 저장 완료!!")
 
 
 @csrf_exempt
@@ -314,7 +311,7 @@ def login_view(request):
             if user is not None:
                 msg = 'login success!'
                 login(request, user)
-        return render(request, 'index.html', {'form': form, 'msg': msg})
+        return render(request, 'login.html', {'form': form, 'msg': msg})
     else:
         form = AuthenticationForm()
         return render(request, 'login.html', {'form': form})
