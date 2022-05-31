@@ -62,14 +62,14 @@ def transcribe_gcs(gcs_uri, content, sample_rate_hertz):
         else:
             text_1 += result.alternatives[0].transcript + ' '
 
-    # path가져오기
-    path = os.getcwd()
-    folder_text = "text"
-    text_file = os.path.join(path, folder_text, content)
-
-    f = open('{}.txt'.format(text_file), 'w')
-    f.write(text_2)
-    f.close()
+    # # path가져오기
+    # path = os.getcwd()
+    # folder_text = "text"
+    # text_file = os.path.join(path, folder_text, content)
+    #
+    # f = open('{}.txt'.format(text_file), 'w')
+    # f.write(text_2)
+    # f.close()
     print("STT 완료")
 
 

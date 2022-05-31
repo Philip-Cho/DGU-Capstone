@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meat charset="UTF-8" />
+        <title> 카페인수혈 </title>
+    </head>
+    <body>
+        {{ user }}<br />
+        {% for i in params %} {{i}}<br />
+        {% endfor %}{% if user.is_authenticated %}
+        <p><a href="{% url 'logout' %}">로그아웃</a></p>
+        {% else %}
+        <p><a href="{% url 'register' %}">회원가입</a></p>
+        <p><a href="{% url 'login' %}">로그인</a></p>
+        {% endif %}
+    </body>
+</html>
