@@ -51,7 +51,7 @@ def process_text(pre_summary):
 
 
 def summary_text(text, model, tokenizer, max_length=None):
-    print("요약 시작 ")
+    print("요약 시작")
     text = text.replace('\n', ' ')
     inputs = tokenize_split(text, tokenizer)
     n_seg = inputs['input_ids'].shape[0]  # max_length로 split된 개수
