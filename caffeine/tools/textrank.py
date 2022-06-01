@@ -99,20 +99,16 @@ def keysents_blank_rd(keywords: list, keysents: list):
     qas = []
     for keysent in keysents:
         words_keysent = word_tokenize(keysent)
-        for keyword in keywords:
-            keyword_1 = keyword[0].upper() + keyword[1:]
-            sent_blank = ''
-
-            if keyword in words_keysent:
-                sent_blank = keysent.replace(' ' + keyword, ' __________')  # 'ai'같은 단어 빈칸 방지
-                answer = keyword
-            elif keyword_1 in words_keysent:
-                sent_blank = keysent.replace(keyword_1, '__________')  # 문장 첫단어
-                answer = keyword_1
-            else:
-                continue
-            qa = {'sentence_blank': sent_blank, 'sentence': keysent, 'answer': answer}
-            qas.append(qa)
+        for word in words_keysent:
+            for keyword in keywords:
+                if re.findall(keyword, word, re.IGNORECASE) != [] and words_keysent.index(word) != 0:
+                    sent_blank = keysent.replace(' ' + word, ' __________')  # 'ai'같은 단어 빈칸 방지
+                elif re.findall(keyword, word, re.IGNORECASE) != [] and words_keysent.index(word) == 0:
+                    sent_blank = keysent.replace(word + ' ', '__________ ')  # 문장 첫단어
+                else:
+                    continue
+                qa = {'sentence_blank': sent_blank, 'sentence': keysent, 'answer': word}
+                qas.append(qa)
 
     random_idx = random.randint(0, len(qas) - 1)
 
