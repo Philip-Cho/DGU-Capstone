@@ -4,6 +4,7 @@ from nltk.tokenize import word_tokenize, sent_tokenize
 from google.cloud import storage
 
 import numpy as np
+import random
 
 # 2) Preprocess the sentences
 def preprocess_sents(sentences, stop_words):
@@ -92,6 +93,21 @@ def keysents_blank(keywords: list, keysents: list):
     print("키워드 추출 완료")
     return {'keywords': keywords, 'sentence_blank': keysent_blank, 'sentence': keysent, 'answer': keyword_keysent}
 
+
+def keysents_blank_rd(keywords: list, keysents: list):
+    qas = []
+    for keysent in keysents:
+        for keyword in keywords:
+            if keyword in keysent:
+                sent_blank = keysent.replace(keyword, '__________')
+                qa = {'sentence_blank': sent_blank, 'sentence': keysent, 'answer': keyword}
+                qas.append(qa)
+
+    random_idx = random.randint(0, len(qas) - 1)
+
+    return qas[random_idx]
+
+
 def postprocess_keywords(keywords):
     for kw in keywords:
         if len(kw)<5 or kw not in keywords:
@@ -131,6 +147,10 @@ def key_question(text_all, model):
     keywords_weight = get_keywords(text, kw_model, 10, stop_words)
     keywords = [word_tup[0] for word_tup in keywords_weight]
     keywords = postprocess_keywords(keywords)  # 복수/단수 or 동사/명사 차이의 유사도 높은 단어 처리
+    print('키워드 추출 완료')
 
-    return keysents_blank(keywords, keysents)
+    qa = keysents_blank_rd(keywords, keysents)  # {'sentence_blank':sent_blank, 'sentence':keysent, 'answer':keyword}
+    qa['keywords'] = keywords
+
+    return qa     # return qa, keywords : 데이터 적재시
 
