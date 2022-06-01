@@ -5,6 +5,7 @@ from google.cloud import storage
 
 import numpy as np
 import random
+import re
 
 # 2) Preprocess the sentences
 def preprocess_sents(sentences, stop_words):
@@ -97,23 +98,32 @@ def keysents_blank(keywords: list, keysents: list):
 def keysents_blank_rd(keywords: list, keysents: list):
     qas = []
     for keysent in keysents:
+        words_keysent = word_tokenize(keysent)
         for keyword in keywords:
-            if keyword in keysent:
-                sent_blank = keysent.replace(keyword, '__________')
-                qa = {'sentence_blank': sent_blank, 'sentence': keysent, 'answer': keyword}
-                qas.append(qa)
+            keyword_1 = keyword[0].upper() + keyword[1:]
+            sent_blank = ''
+
+            if keyword in words_keysent:
+                sent_blank = keysent.replace(' ' + keyword, ' __________')  # 'ai'같은 단어 빈칸 방지
+                answer = keyword
+            elif keyword_1 in words_keysent:
+                sent_blank = keysent.replace(keyword_1, '__________')  # 문장 첫단어
+                answer = keyword_1
+            else:
+                continue
+            qa = {'sentence_blank': sent_blank, 'sentence': keysent, 'answer': answer}
+            qas.append(qa)
 
     random_idx = random.randint(0, len(qas) - 1)
 
     return qas[random_idx]
-
 
 def postprocess_keywords(keywords):
     for kw in keywords:
         if len(kw)<5 or kw not in keywords:
             continue
         idx = keywords.index(kw)
-        n_gram = int(len(kw)*0.8)   # n_gram: 단어의 80% 이상 겹치면 out
+        n_gram = int(len(kw)*0.7)   # n_gram: 단어의 70% 이상 겹치면 out
         window = [kw[i:i+n_gram] for i in range(len(kw)-n_gram+1)]
         for w in window:
             keywords = keywords[:idx+1] + [keyword for keyword in keywords[idx+1:] if w not in keyword]
@@ -149,8 +159,11 @@ def key_question(text_all, model):
     keywords = postprocess_keywords(keywords)  # 복수/단수 or 동사/명사 차이의 유사도 높은 단어 처리
     print('키워드 추출 완료')
 
-    qa = keysents_blank_rd(keywords, keysents)  # {'sentence_blank':sent_blank, 'sentence':keysent, 'answer':keyword}
+    qa = keysents_blank_rd(keywords[:10],
+                           keysents)  # {'sentence_blank':sent_blank, 'sentence':keysent, 'answer':keyword}
+
+    keywords = postprocess_keywords(keywords)  # 복수/단수 or 동사/명사 차이의 유사도 높은 단어 처리
     qa['keywords'] = keywords
 
-    return qa     # return qa, keywords : 데이터 적재시
+    return qa  # return qa, keywords : 데이터 적재시
 
