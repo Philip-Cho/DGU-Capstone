@@ -67,6 +67,9 @@ def result(request):  # 결과물 페이지(주소 입력 -> STT,요약등 결�
         # 동영상 url 받아오기
         print(request.POST['address'])
         movie_url = request.POST['address']
+        # 주소값 수정
+        if movie_url.find("&list")>=1:
+            movie_url = movie_url[:movie_url.find("&list")]
         movie_urls.append(movie_url)
 
         # 동영상 이름 추출
