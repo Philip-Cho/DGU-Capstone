@@ -28,7 +28,7 @@
         <div class="inner">
             <!-- Header -->
             <header id="header">
-                <a href="http://127.0.0.1:8000/caffeine/result/" class="logo"><strong>History Page</strong> by Caffeine
+                <a href="http://127.0.0.1:8000/caffeine/board/" class="logo"><strong>History Page</strong> by Caffeine
                     Intoxication</a>
                 <ul class="icons">
                     <li class="nav-item">
@@ -59,10 +59,10 @@
                     {% for lecture in lecture_list %}
                     <tbody>
                     <tr>
-                        <td><h5 style="margin: 0;"><a href="http://127.0.0.1:8000/caffeine/{{lecture.id}}/">{{ lecture.lecture_name}}</a></h5></td>
+                        <td><h4 style="margin: 0;"><a href="http://127.0.0.1:8000/caffeine/{{lecture.id}}/">{{ lecture.lecture_name}}</a></h4></td>
                     </tr>
                     <tr>
-                        <td>{{ lecture.keyword }}  <p align="right">저장 일시: {{ lecture.created_at }}</p></td>
+                        <td style="text-align: right;">{{ lecture.keyword }}저장 일시: {{ lecture.created_at }}</td>
                     {% endfor %}
                     </tr>
                 {% else %}

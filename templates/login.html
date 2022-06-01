@@ -62,6 +62,12 @@
                         </form>
                             <button id="register" class="button" style = "width: 15%;" onclick="location.href='{% url 'register' %}';">회원가입</button>
                 </div>
+                {% if user.is_authenticated %}
+                    <script type="text/javascript" >
+                        alert('로그인 성공!')
+                        location.replace("http://127.0.0.1:8000/");
+                    </script>    
+                {% endif %}
 <!--                form wrapper div end-->
 
                 <!--            section content end-->
@@ -128,5 +134,18 @@
 <script src="{% static 'js/breakpoints.min.js' %}"></script>
 <script src="{% static 'js/util.js' %}"></script>
 <script src="{% static 'js/main.js' %}"></script>
+
+
+<script>
+    function login_function() {
+        $.ajax({
+            url: 'http://127.0.0.1:8000/login/'
+        }).then(function () {
+            alert("로그인 성공");
+            location.replace("http://127.0.0.1:8000/");
+            });
+        }
+    </script>
+
 
 </html>
