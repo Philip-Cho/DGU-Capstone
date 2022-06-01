@@ -8,70 +8,92 @@
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.88.1">
     <title>강의 새로 요약하기</title>
-<!--    아이콘을 위한 링크 -->
+    <!--    아이콘을 위한 링크 -->
     <link href="{% static 'css/main.css' %}" rel="stylesheet">
     <script src="https://kit.fontawesome.com/acbb32aeb8.js" crossorigin="anonymous"></script>
-	{% load static %}
-<!-- <link href="{% static 'indexStyle.css' %}" rel="stylesheet">-->
-	<!-- JS --> <script src="{% static 'script.js' %}" > </script>
-<!--    한글 폰트-->
+    {% load static %}
+    <!-- <link href="{% static 'indexStyle.css' %}" rel="stylesheet">-->
+    <!-- JS -->
+    <script src="{% static 'script.js' %}"></script>
+    <!--    한글 폰트-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
 </head>
 <body class="is-preload">
 <!-- Wrapper -->
-    <div id="wrapper">
-        <!-- Main -->
-        <div id="main">
-            <div class="inner">
-                <!-- Header -->
-                <header id="header">
-                    <a href="http://127.0.0.1:8000/caffeine/" class="logo"><strong>New summarize Page</strong> by Caffeine Intoxication</a>
-                    <ul class="icons">
-                        <li class="nav-item">
+<div id="wrapper">
+    <!-- Main -->
+    <div id="main">
+        <div class="inner">
+            <!-- Header -->
+            <header id="header">
+                <a href="http://127.0.0.1:8000/caffeine/" class="logo"><strong>New summarize Page</strong> by Caffeine
+                    Intoxication</a>
+                <ul class="icons">
+                    <li class="nav-item">
                         {% if user.is_authenticated %}
-<!--                        <a class="nav-link"  href="{% url 'logout' %}">{{ user.username }} (로그아웃)</a>-->
-                            <a class="nav-link"  href="javascript:logout_function();">{{ user.username }} (로그아웃)</a>
+                            <!--                        <a class="nav-link"  href="{% url 'logout' %}">{{ user.username }} (로그아웃)</a>-->
+                            <a class="nav-link" href="javascript:logout_function();">{{ user.username }} (로그아웃)</a>
                         {% else %}
-                        <a class="nav-link" href="{% url 'login' %}">로그인</a>
+                            <a class="nav-link" href="{% url 'login' %}">로그인</a>
                         {% endif %}
-                        </li>
-                        <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-                        <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-                        <li><a href="#" class="icon brands fa-snapchat-ghost"><span class="label">Snapchat</span></a></li>
-                        <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-                    </ul>
-                </header>
-<!--                content -->
-                <section>
-<!--				새로운 컨텐츠 넣을 때 이 곳에 요소들을 추가한다. 나머지는 틀-->
-                    <b>야 너두 영어로 수업 들을 수 있어!!!</b>
-					<div id = 'col-6 col-12-small'>
-						<form action="http://127.0.0.1:8000/caffeine/result/" method="POST">
-                            <input type="text" id="input" name="address" placeholder="유튜브 주소 입력" style = 'display : inline-block; float : left; width : 70%; margin-right:  2%'>
-                            <input type="submit" value="요약하기" class = 'primary' style = 'display : inline-block; float : left;'>
-						</form>
+                    </li>
+                    <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+                    <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+                    <li><a href="#" class="icon brands fa-snapchat-ghost"><span class="label">Snapchat</span></a></li>
+                    <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+                </ul>
+            </header>
+            <!--                content -->
+            <section>
+                <!--				새로운 컨텐츠 넣을 때 이 곳에 요소들을 추가한다. 나머지는 틀-->
+                <b>야 너두 영어로 수업 들을 수 있어!!!</b>
+                <div id='col-6 col-12-small'>
+                    <form action="http://127.0.0.1:8000/caffeine/result/" method="POST">
+                        <input type="text" id="input" name="address" placeholder="유튜브 주소 입력"
+                               style='display : inline-block; float : left; width : 70%; margin-right:  2%'>
+                        <input type="submit" value="요약하기" class='primary' style='display : inline-block; float : left;'>
+                    </form>
 
-					</div>
-<!--            section content end-->
-                </section>
-        <!-- inner end -->
+                </div>
+                <!--            section content end-->
+            </section>
+
+            <sectiion>
+            <div class="box">
+            <div class="h-100 p-5 text-white bg-dark rounded-3">
+                <h2>추천강의</h2>
+                {% for lec in recommend %}
+                    <form action="http://127.0.0.1:8000/caffeine/result/" method="POST">
+                        <input type="submit" value="요약하기" class='primary'
+                                                                     style='display : inline-block; float : left;'>
+                        <label>{{ lec.lecture_name }}</label>
+                        <input type="text" id="input" name="address" value="{{ lec.lecture_url }}"
+                               style='display : none; float : left; width : 70%; margin-right:  2%'>
+                    </form>
+                {% endfor %}
+            </div>
+            </div>
+            </sectiion>
+
+
+            <!-- inner end -->
         </div>
-    <!--main end-->
+        <!--main end-->
     </div>
-<!--        side bar start-->
-<div id="sidebar">
-    <div class="inner">
+    <!--        side bar start-->
+    <div id="sidebar">
+        <div class="inner">
 
-        <!-- Search -->
+            <!-- Search -->
             <section id="search" class="alt">
                 <form method="post" action="#">
-                    <input type="text" name="query" id="query" placeholder="Search" />
+                    <input type="text" name="query" id="query" placeholder="Search"/>
                 </form>
             </section>
 
-        <!-- Menu -->
+            <!-- Menu -->
             <nav id="menu">
                 <header class="major">
                     <h2>Menu</h2>
@@ -84,7 +106,7 @@
                 </ul>
             </nav>
 
-        <!-- Section -->
+            <!-- Section -->
             <section>
                 <header class="major">
                     <h2>Get in touch</h2>
@@ -93,40 +115,53 @@
                 <ul class="contact">
                     <li class="icon solid fa-envelope"><a href="#">information@caffeine.ac.kr</a></li>
                     <li class="icon solid fa-phone">(010) 1234-5678</li>
-                    <li class="icon solid fa-home">30, Pildong-ro 1-gil, Jung-gu, Seoul, Republic of Korea<br />
-                    02-2260-0000</li>
+                    <li class="icon solid fa-home">30, Pildong-ro 1-gil, Jung-gu, Seoul, Republic of Korea<br/>
+                        02-2260-0000
+                    </li>
                 </ul>
             </section>
 
-        <!-- Footer -->
+            <!-- Footer -->
             <footer id="footer">
                 <p class="copyright">&copy; Caffeine. All rights reserved.
-                </br>Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+                    </br>Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
             </footer>
-<!--inner end-->
+            <!--inner end-->
+        </div>
+        <!--    sidebar end-->
     </div>
-<!--    sidebar end-->
-</div>
-<!--wrapper end-->
+    <!--wrapper end-->
 </div>
 
 </body>
 
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'js/browser.min.js' %}"></script>
-    <script src="{% static 'js/breakpoints.min.js' %}"></script>
-    <script src="{% static 'js/util.js' %}"></script>
-    <script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/browser.min.js' %}"></script>
+<script src="{% static 'js/breakpoints.min.js' %}"></script>
+<script src="{% static 'js/util.js' %}"></script>
+<script src="{% static 'js/main.js' %}"></script>
 <!--    로그아웃 알림창 이벤트-->
 <script>
-function logout_function() {
-    $.ajax({
-        url: 'http://127.0.0.1:8000/logout/'
-    }).then(function () {
-        alert("로그아웃 되었습니다");
-        location.reload();
-        // location.replace("이동할 페이지");
+    function logout_function() {
+        $.ajax({
+            url: 'http://127.0.0.1:8000/logout/'
+        }).then(function () {
+            alert("로그아웃 되었습니다");
+            location.reload();
+            // location.replace("이동할 페이지");
         });
+    }
+
+    function recommend_lec() {
+        $.ajax({
+            url: 'http://127.0.0.1:8000/caffeine/result/',
+            method: 'POST',
+            data: {'address': $('#recommend_url').html()},
+
+            success: function (data) {
+                location.reload();
+            },
+        })
     }
 </script>
 </html>

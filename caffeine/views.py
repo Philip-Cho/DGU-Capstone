@@ -45,7 +45,13 @@ code_imgs = list()
 
 
 def index(request):  ## 인덱스 페이지(주소창 있는 화면)
-    return render(request, 'index.html')
+    # lecture_name에 따라 count를 한 후
+    video_views = LectureHistory.objects.values('lecture_name','lecture_url').annotate(num_lecture=Count('lecture_name')).order_by(
+        '-num_lecture')
+    # 가장 많은 제목의 강의들의 강의명과 링크를 반환
+    toweb = {"recommend": video_views[:3]}
+
+    return render(request, 'index.html', toweb)
 
 
 def model(request):  ## 모델 로드 페이지 (속도 개선 위해 임시)
@@ -60,15 +66,14 @@ def model(request):  ## 모델 로드 페이지 (속도 개선 위해 임시)
     return HttpResponse("!!모델로드 완료!!")
 
 
-@csrf_exempt # @csrf_exempt: 사이트 간 위변조 방지 토큰
+@csrf_exempt  # @csrf_exempt: 사이트 간 위변조 방지 토큰
 def result(request):  # 결과물 페이지(주소 입력 -> STT,요약등 결과물 출력)
     if request.method == 'POST':
-
         # 동영상 url 받아오기
         print(request.POST['address'])
         movie_url = request.POST['address']
         # 주소값 수정
-        if movie_url.find("&list")>=1:
+        if movie_url.find("&list") >= 1:
             movie_url = movie_url[:movie_url.find("&list")]
         movie_urls.append(movie_url)
 
@@ -89,14 +94,16 @@ def result(request):  # 결과물 페이지(주소 입력 -> STT,요약등 결�
             'embed_url': embed_url,
             'movie_title': movie_title,
         }
-    return render(request, 'result.html', context)
+        print(context)
+        return render(request, 'result.html', context)
+
 
 # 메인페이지 강의 추천을 위한 DB READ
 def recommandataion(request):
-    
     top3 = {}
     # lecture_name에 따라 count를 한 후 
-    video_views = LectureHistory.objects.values('lecture_name').annotate(num_lecture = Count('lecture_name')).order_by('-num_lecture')
+    video_views = LectureHistory.objects.values('lecture_name').annotate(num_lecture=Count('lecture_name')).order_by(
+        '-num_lecture')
     # 가장 많은 제목의 강의들의 강의명과 링크를 반환
 
     lec_name = video_views.values('lecture_name')[:3]
@@ -107,9 +114,10 @@ def recommandataion(request):
     return 1
     # return render(request, 'recommandation.html', top3)
 
+
 @csrf_exempt
 def text(request):  # STT 버튼 호출시 실행
-    
+
     if request.method == 'POST':
 
         # 동영상 다운
@@ -143,6 +151,7 @@ def text(request):  # STT 버튼 호출시 실행
 
     return JsonResponse(gen)
 
+
 # @csrf_exempt
 # def imgpost(request):
 #     if request.method == 'POST':
@@ -154,7 +163,6 @@ def text(request):  # STT 버튼 호출시 실행
 @csrf_exempt
 def capture(request):
     if request.method == 'POST':
-
         count = 1
         # 좌표값
         x_left = float(request.POST['x_left'])
@@ -162,11 +170,10 @@ def capture(request):
         x_right = float(request.POST['x_right'])
         y_down = float(request.POST['y_down'])
 
-        print(x_left,y_up,x_right,y_down)
-        pyautogui.screenshot('./img/{}.png'.format(count),region=(x_left,y_up,x_right,y_down))
+        print(x_left, y_up, x_right, y_down)
+        pyautogui.screenshot('./img/{}.png'.format(count), region=(x_left, y_up, x_right, y_down))
 
     return HttpResponse("캡쳐완료")
-
 
 
 # codes 폴더에 있는 모든 이미지 캡처 순서대로 정렬 후 불러오기
@@ -211,7 +218,6 @@ def code_to_text(request):
 @csrf_exempt
 def summary(request):  ## 요약문 생성 버튼을 위한 메소드
     if request.method == 'POST':
-
         # 요약문 생성
         sum_text = summary_text(text_alls[-1], models_sum[-1], tokens_sum[-1])
         print(sum_text)
@@ -239,7 +245,7 @@ def keytext(request):  # 키워드 추출을 위한 메소드
         count = 1
         for i in key_dict["keywords"]:
             keywords += str(count) + '순위 : ' + str(i) + '<br>'
-            hash_tag += '# ' + str(i) +',  '
+            hash_tag += '# ' + str(i) + ',  '
             count += 1
         print(keywords)
         hash_tags.append(hash_tag)
@@ -285,7 +291,6 @@ def savedb(request):  # DB 저장을 위한 메소드
             return HttpResponse("!!로그인 필요!!")
 
 
-
 @csrf_exempt
 def board(request):  # 게시판 출력을 위한 메소드
 
@@ -295,16 +300,17 @@ def board(request):  # 게시판 출력을 위한 메소드
     paginator = Paginator(question_list, 10)  # 페이지당 10개씩
     page_obj = paginator.get_page(page)
     context = {'lecture_list': page_obj}
-
     return render(request, 'board.html', context)
 
+
 @csrf_exempt
-def history_result(request,id):  # 게시판 결과물을 위한 메소드
+def history_result(request, id):  # 게시판 결과물을 위한 메소드
 
     history_lecture = get_object_or_404(LectureHistory, pk=id)
     context = {'history_lecture': history_lecture}
 
     return render(request, 'history_result.html', context)
+
 
 # 회원가입
 def register(request):
@@ -323,11 +329,12 @@ def register(request):
         form = RegisterForm()
         return render(request, 'register.html', {'form': form})
 
+
 # 로그인
 def login_view(request):
     if request.method == 'POST':
         # 유저 존재하는지 검증
-        form = AuthenticationForm(request, request.POST) # Django가 만들어 놓은 Form
+        form = AuthenticationForm(request, request.POST)  # Django가 만들어 놓은 Form
         msg = '가입되어 있지 않거나 로그인 정보가 잘못되었습니다.'
         print(form.is_valid)
         if form.is_valid():
@@ -341,7 +348,8 @@ def login_view(request):
     else:
         form = AuthenticationForm()
         return render(request, 'login.html', {'form': form})
-        
+
+
 # 로그아웃
 def logout_view(request):
     logout(request)
