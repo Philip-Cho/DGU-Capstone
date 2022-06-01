@@ -104,9 +104,6 @@ def recommandataion():
 @csrf_exempt
 def text(request):  # STT 버튼 호출시 실행
     
-    messages.add_message(request, messages.INFO, '성택이 짱~')
-    print('돌아갑니다~~~~~~~~~')
-    
     if request.method == 'POST':
 
         # 동영상 다운
@@ -334,7 +331,6 @@ def login_view(request):
             if user is not None:
                 msg = 'login success!'
                 login(request, user)
-                my_msg(request)
         return render(request, 'login.html', {'form': form, 'msg': msg})
     else:
         form = AuthenticationForm()
@@ -343,10 +339,4 @@ def login_view(request):
 # 로그아웃
 def logout_view(request):
     logout(request)
-    my_msg(request)
-    print('돌아갑니다~~~~~~~~~')
     return redirect('index')
-
-def my_msg(request):
-    messages.add_message(request, messages.INFO, '성택이 짱~')
-    return render(request, 'messages.html')
