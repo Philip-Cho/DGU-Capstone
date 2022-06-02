@@ -99,19 +99,19 @@ def result(request):  # 결과물 페이지(주소 입력 -> STT,요약등 결�
 
 
 # 메인페이지 강의 추천을 위한 DB READ
-def recommandataion(request):
-    top3 = {}
-    # lecture_name에 따라 count를 한 후 
-    video_views = LectureHistory.objects.values('lecture_name').annotate(num_lecture=Count('lecture_name')).order_by(
-        '-num_lecture')
-    # 가장 많은 제목의 강의들의 강의명과 링크를 반환
+# def recommandataion(request):
+#     top3 = {}
+#     # lecture_name에 따라 count를 한 후 
+#     video_views = LectureHistory.objects.values('lecture_name').annotate(num_lecture=Count('lecture_name')).order_by(
+#         '-num_lecture')
+#     # 가장 많은 제목의 강의들의 강의명과 링크를 반환
 
-    lec_name = video_views.values('lecture_name')[:3]
-    lec_url = video_views.values('lecture_url')[:3]
+#     lec_name = video_views.values('lecture_name')[:3]
+#     lec_url = video_views.values('lecture_url')[:3]
 
-    for k, v in zip(lec_name, lec_url):
-        top3[list(k.values())[0]] = list(v.values())[0]
-    return 1
+#     for k, v in zip(lec_name, lec_url):
+#         top3[list(k.values())[0]] = list(v.values())[0]
+#     return 1
     # return render(request, 'recommandation.html', top3)
 
 
