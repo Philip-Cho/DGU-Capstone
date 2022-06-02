@@ -29,7 +29,7 @@ def transcribe_gcs(gcs_uri, content, sample_rate_hertz):
         for i in text.split():
             words_list.append(i)
 
-    boost = 20.0
+    boost = 10.0
     speech_contexts_element = {"phrases": words_list, "boost": boost}
     speech_contexts = [speech_contexts_element]
 

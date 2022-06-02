@@ -112,7 +112,7 @@ body.edit_cursor {
 
                 </div>
 <!--                종수 캡쳐 버튼 시작-->
-                <button id="capture_button" class="button" onclick="getxy()" type="button">캡쳐</button>
+                <button id="capture_button" class="button" onclick="seongtaek()" type="button">캡쳐</button>
                 <input type="button" value="캡쳐드래그" id="edit"/>
 <!--                캡쳐 이벤트 처리를 위한 요소-->
                 <div id="screenshot">
@@ -308,6 +308,27 @@ body.edit_cursor {
 <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
 
 <script>
+
+function seongtaek() {
+    var canvas = document.createElement('canvas');
+    var video = document.querySelector('#youtube');
+    var ctx = canvas.getContext('2d');
+
+    console.log(video)
+    // Change the size here
+    canvas.width = parseInt(video.offsetWidth);
+    canvas.height =  parseInt(video.offsetHeight);
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    var a = document.createElement('a');
+    a.download = 'snap-' + canvas.width + 'x' + canvas.height + '-' + video.currentTime + '.jpg';
+    // Won't work on file:/// URLs. SecurityError: Tainted canvases may not be exported.
+    a.href = canvas.toDataURL('image/jpeg');
+    document.body.appendChild(a).click();
+    a.remove();
+}
+
+
 window.onload = function(){
 	// 캡쳐 버튼 클릭 이벤트 등록
 	document.getElementById("edit").addEventListener("click", function(e){

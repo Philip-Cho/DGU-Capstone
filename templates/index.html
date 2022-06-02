@@ -68,6 +68,7 @@
                     <form action="http://127.0.0.1:8000/caffeine/result/" method="POST">
                         <input type="submit" value="요약하기" class='primary'
                                                                      style='display : inline-block; float : left;'>
+                        <img src="http://img.youtube.com/vi/{{lec.id_url}}/mqdefault.jpg" alt="thumbnail">
                         <label>{{ lec.lecture_name }}</label>
                         <input type="text" id="input" name="address" value="{{ lec.lecture_url }}"
                                style='display : none; float : left; width : 70%; margin-right:  2%'>

@@ -28,6 +28,7 @@ contents = list()
 movie_urls = list()
 embed_urls = list()
 movie_titles = list()
+movie_ids = list()
 
 ## 텍스트 추출 변수
 text_alls = list()
@@ -46,7 +47,8 @@ code_imgs = list()
 
 def index(request):  ## 인덱스 페이지(주소창 있는 화면)
     # lecture_name에 따라 count를 한 후
-    video_views = LectureHistory.objects.values('lecture_name','lecture_url').annotate(num_lecture=Count('lecture_name')).order_by(
+    video_views = LectureHistory.objects.values('lecture_name', 'lecture_url', 'id_url').annotate(
+        num_lecture=Count('lecture_name')).order_by(
         '-num_lecture')
     # 가장 많은 제목의 강의들의 강의명과 링크를 반환
     toweb = {"recommend": video_views[:3]}
@@ -76,6 +78,7 @@ def result(request):  # 결과물 페이지(주소 입력 -> STT,요약등 결�
         if movie_url.find("&list") >= 1:
             movie_url = movie_url[:movie_url.find("&list")]
         movie_urls.append(movie_url)
+        movie_ids.append(movie_url[movie_url.find("=") + 1:])
 
         # 동영상 이름 추출
         movie_title = down_title(movie_url).replace(":", " -")
@@ -112,7 +115,7 @@ def result(request):  # 결과물 페이지(주소 입력 -> STT,요약등 결�
 #     for k, v in zip(lec_name, lec_url):
 #         top3[list(k.values())[0]] = list(v.values())[0]
 #     return 1
-    # return render(request, 'recommandation.html', top3)
+# return render(request, 'recommandation.html', top3)
 
 
 @csrf_exempt
@@ -265,27 +268,57 @@ def savedb(request):  # DB 저장을 위한 메소드
         if request.user.is_authenticated:
             print(request.user)
             ## history
-            history = LectureHistory()
-            history.lecture_id = get_object_or_404(Users, username=request.user)
-            try:
-                history.lecture_name = movie_titles[-1]
-                history.embed_url = embed_urls[-1]
-                history.lecture_url = movie_urls[-1]
-                history.lecture_note = text_alls[-1]
-                history.lecture_sum = sum_texts[-1]
-                history.keyword = hash_tags[-1]
-                history.update_at = timezone.now()
+            # history = .all()
+            history, cre = LectureHistory.objects.get_or_create(id=str(request.user) + '_' + str(movie_titles[-1]),
+                                                                user_id = request.user)
+
+            if cre == False:
                 history.created_at = timezone.now()
-            except:
-                history.lecture_name = movie_titles[-1]
-                history.embed_url = embed_urls[-1]
-                history.lecture_url = movie_urls[-1]
-                history.lecture_note = " "
-                history.lecture_sum = " "
-                history.keyword = " "
-                history.update_at = timezone.now()
-                history.created_at = timezone.now()
-            history.save()
+                try:
+                    history.lecture_name = movie_titles[-1]
+                    history.embed_url = embed_urls[-1]
+                    history.lecture_url = movie_urls[-1]
+                    history.id_url = movie_ids[-1]
+                    history.lecture_note = text_alls[-1]
+                    history.lecture_sum = sum_texts[-1]
+                    history.keyword = hash_tags[-1]
+                    history.update_at = timezone.now()
+                    history.created_at = timezone.now()
+                    history.save()
+                except:
+                    history.lecture_name = movie_titles[-1]
+                    history.embed_url = embed_urls[-1]
+                    history.lecture_url = movie_urls[-1]
+                    history.id_url = movie_ids[-1]
+                    history.lecture_note = " "
+                    history.lecture_sum = " "
+                    history.keyword = " "
+                    history.update_at = timezone.now()
+                    history.created_at = timezone.now()
+                    history.save()
+            else:
+                try:
+                    history.lecture_name = movie_titles[-1]
+                    history.embed_url = embed_urls[-1]
+                    history.lecture_url = movie_urls[-1]
+                    history.id_url = movie_ids[-1]
+                    history.lecture_note = text_alls[-1]
+                    history.lecture_sum = sum_texts[-1]
+                    history.keyword = hash_tags[-1]
+                    history.update_at = timezone.now()
+                    history.created_at = timezone.now()
+                    history.save()
+                except:
+                    history.lecture_name = movie_titles[-1]
+                    history.embed_url = embed_urls[-1]
+                    history.lecture_url = movie_urls[-1]
+                    history.id_url = movie_ids[-1]
+                    history.lecture_note = " "
+                    history.lecture_sum = " "
+                    history.keyword = " "
+                    history.update_at = timezone.now()
+                    history.created_at = timezone.now()
+                    history.save()
             return HttpResponse("!!DB 저장 완료!!")
         else:
             return HttpResponse("!!로그인 필요!!")
