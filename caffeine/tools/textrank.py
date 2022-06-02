@@ -133,16 +133,33 @@ def load_key_model():
     model = KeyBERT('all-MiniLM-L12-v2')
     return model
 
+
 def plot_keywords(key_dict=dict):
     keywords = key_dict['keywords']
     weights = key_dict['weights']
+    x = [i for i in range(10)]
+    y = [i for i in range(10)]
+    random.shuffle(x)
+    random.shuffle(y)
+    df = pd.DataFrame(zip(keywords, weights), columns=['keywords', 'weights'])
     # plotting
-    plt.tick_params(left=False, right=False, labelleft=True,
+    plt.figure(figsize=(10, 10))
+    plt.tick_params(left=False, right=False, labelleft=False,
                     labelbottom=False, bottom=False)
     sns.despine(bottom=True, left=True)
-    sns.barplot(x=weights, y=keywords, palette='Reds')
+    fontdict = {'color': 'white'}
+    for i in range(10):
+        plt.text(x=x[i] - 0.5, y=y[i], s=df.loc[i, 'keywords'],  # x 좌표 튜닝 필요
+                 fontdict={'color': 'white', 'size': df.loc[i, 'weights'] * 50})
+    #     plt.bar(x=weights, height=keywords)
+    #     sns.barplot(x=weights, y=keywords, palette='Reds')
+    sns.scatterplot(x, y, alpha=0.6, linewidth=0,
+                    s=[w * 50000 for w in weights], hue=weights, palette='coolwarm')
+    plt.xlim(-2, 12)
+    plt.ylim(-2, 12)
     plot_file = BytesIO()
     plt.savefig(plot_file, format='png')
+    plt.legend([], [], frameon=False)
     encoded_file = plot_file.getvalue()
 
     return encoded_file
