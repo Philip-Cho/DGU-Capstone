@@ -3,9 +3,13 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from nltk.tokenize import word_tokenize, sent_tokenize
 from google.cloud import storage
 
-import numpy as np
 import random
 import re
+import numpy as np
+import seaborn as sns
+import pandas as pd
+import matplotlib.pyplot as plt
+from io import BytesIO
 
 # 2) Preprocess the sentences
 def preprocess_sents(sentences, stop_words):
@@ -129,6 +133,20 @@ def load_key_model():
     model = KeyBERT('all-MiniLM-L12-v2')
     return model
 
+def plot_keywords(key_dict=dict):
+    keywords = key_dict['keywords']
+    weights = key_dict['weights']
+    # plotting
+    plt.tick_params(left=False, right=False, labelleft=True,
+                    labelbottom=False, bottom=False)
+    sns.despine(bottom=True, left=True)
+    sns.barplot(x=weights, y=keywords, palette='Reds')
+    plot_file = BytesIO()
+    plt.savefig(plot_file, format='png')
+    encoded_file = plot_file.getvalue()
+
+    return encoded_file
+
 def key_question(text_all, model):
     sent_ngram = 2
     stopwords_path = 'text/stop_words_english.txt'
@@ -150,16 +168,18 @@ def key_question(text_all, model):
                              key=lambda k: sent_rank_idx[k], reverse=True)
     keysents = get_keysents(sorted_sent_idx, sentences, sent_num=10)
     kw_model = model
-    keywords_weight = get_keywords(text, kw_model, 10, stop_words)
-    keywords = [word_tup[0] for word_tup in keywords_weight]
-    keywords = postprocess_keywords(keywords)  # 복수/단수 or 동사/명사 차이의 유사도 높은 단어 처리
+
+    keywords_w_weight = get_keywords(text, kw_model, 20, stop_words)  # (키워드, 중요도) 20개
+    keywords_20 = [word_tup[0] for word_tup in keywords_w_weight]  # 키워드만 20개
+    #     keywords_weights_20 = [word_tup[1] for word_tup in keywords_w_weight]
     print('키워드 추출 완료')
 
-    qa = keysents_blank_rd(keywords[:10],
+    qa = keysents_blank_rd(keywords_20[:10],
                            keysents)  # {'sentence_blank':sent_blank, 'sentence':keysent, 'answer':keyword}
-
-    keywords = postprocess_keywords(keywords)  # 복수/단수 or 동사/명사 차이의 유사도 높은 단어 처리
+    keywords = postprocess_keywords(keywords_20)  # 복수/단수 or 동사/명사 차이의 유사도 높은 단어 처리 후 10개 리턴
+    weights = [w for (kw, w) in keywords_w_weight if kw in keywords]
     qa['keywords'] = keywords
+    qa['weights'] = weights
 
     return qa  # return qa, keywords : 데이터 적재시
 
