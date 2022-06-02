@@ -149,8 +149,11 @@ def plot_keywords(key_dict=dict):
     sns.despine(bottom=True, left=True)
     fontdict = {'color': 'white'}
     for i in range(10):
-        plt.text(x=x[i] - 0.5, y=y[i], s=df.loc[i, 'keywords'],  # x 좌표 튜닝 필요
-                 fontdict={'color': 'white', 'size': df.loc[i, 'weights'] * 50})
+        plt.text(x=x[i], y=y[i],
+                 verticalalignment='center',
+                 horizontalalignment='center',
+                 s=df.loc[i, 'keywords'],
+                 fontdict={'color':'white', 'size':df.loc[i, 'weights']*50})
     #     plt.bar(x=weights, height=keywords)
     #     sns.barplot(x=weights, y=keywords, palette='Reds')
     sns.scatterplot(x, y, alpha=0.6, linewidth=0,
