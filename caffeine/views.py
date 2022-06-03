@@ -263,27 +263,42 @@ def savedb(request):  # DB 저장을 위한 메소드
         if request.user.is_authenticated:
             print(request.user)
             ## history 내에 데이터 있는지 확인 후 없으면 생성
-            history, cre = LectureHistory.objects.get_or_create(id=str(request.user) + '_' + str(movie_titles[-1]),
-                                                                user_id=request.user, created_at = timezone.now())
+            try: # DB 존재하지 않을 시
+                history, cre = LectureHistory.objects.get_or_create(id=str(request.user) + '_' + str(movie_titles[-1]),
+                                                                    user_id=request.user, created_at=timezone.now())
+                history.lecture_name = movie_titles[-1]
+                history.embed_url = embed_urls[-1]
+                history.lecture_url = movie_urls[-1]
+                history.id_url = movie_ids[-1]
+                history.update_at = timezone.now()
+                try:
+                    history.lecture_note = text_alls[-1]
+                    history.lecture_sum = sum_texts[-1]
+                    history.keyword = hash_tags[-1]
+                    history.save()
+                except:
+                    history.lecture_note = " "
+                    history.lecture_sum = " "
+                    history.keyword = " "
+                    history.save()
+            except: #DB 존재시
+                history = LectureHistory.objects.get(id=str(request.user) + '_' + str(movie_titles[-1]))
 
-            history.lecture_name = movie_titles[-1]
-            history.embed_url = embed_urls[-1]
-            history.lecture_url = movie_urls[-1]
-            history.id_url = movie_ids[-1]
-            history.update_at = timezone.now()
-
-            ## 해당 아이디에 해당하는 데이터 입력
-            try:
-                history.lecture_note = text_alls[-1]
-                history.lecture_sum = sum_texts[-1]
-                history.keyword = hash_tags[-1]
-                history.save()
-            except:
-                history.lecture_note = " "
-                history.lecture_sum = " "
-                history.keyword = " "
-                history.save()
-
+                history.lecture_name = movie_titles[-1]
+                history.embed_url = embed_urls[-1]
+                history.lecture_url = movie_urls[-1]
+                history.id_url = movie_ids[-1]
+                history.update_at = timezone.now()
+                try:
+                    history.lecture_note = text_alls[-1]
+                    history.lecture_sum = sum_texts[-1]
+                    history.keyword = hash_tags[-1]
+                    history.save()
+                except:
+                    history.lecture_note = " "
+                    history.lecture_sum = " "
+                    history.keyword = " "
+                    history.save()
             return HttpResponse("!!DB 저장 완료!!")
         else:
             return HttpResponse("!!로그인 필요!!")
