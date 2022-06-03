@@ -16,7 +16,7 @@ from .tools.down_movie import downYoutubeMp3, down_title
 from .tools.stt import upload_blob_from_memory, transcribe_gcs
 from .tools.vision_text import text_detection
 from .tools.sum import summary_text, sum_model_load
-from .tools.textrank import key_question, load_key_model
+from .tools.textrank import key_question, load_key_model, plot_keywords
 
 from .models import LectureHistory
 from .models import Users
@@ -41,11 +41,13 @@ sum_texts = list()
 ## 키워드 추출 변수
 models_key = list()
 hash_tags = list()
+
 ## 이미지 추출 변수
 code_imgs = list()
 
 
 def index(request):  ## 인덱스 페이지(주소창 있는 화면)
+    # 메인페이지 강의 추천을 위한 DB READ
     # lecture_name에 따라 count를 한 후
     video_views = LectureHistory.objects.values('lecture_name', 'lecture_url', 'id_url').annotate(
         num_lecture=Count('lecture_name')).order_by(
@@ -74,9 +76,12 @@ def result(request):  # 결과물 페이지(주소 입력 -> STT,요약등 결�
         # 동영상 url 받아오기
         print(request.POST['address'])
         movie_url = request.POST['address']
+
         # 주소값 수정
         if movie_url.find("&list") >= 1:
             movie_url = movie_url[:movie_url.find("&list")]
+
+        # 주소값 할당
         movie_urls.append(movie_url)
         movie_ids.append(movie_url[movie_url.find("=") + 1:])
 
@@ -97,25 +102,9 @@ def result(request):  # 결과물 페이지(주소 입력 -> STT,요약등 결�
             'embed_url': embed_url,
             'movie_title': movie_title,
         }
-        print(context)
+
+        print(context)  # 확인
         return render(request, 'result.html', context)
-
-
-# 메인페이지 강의 추천을 위한 DB READ
-# def recommandataion(request):
-#     top3 = {}
-#     # lecture_name에 따라 count를 한 후 
-#     video_views = LectureHistory.objects.values('lecture_name').annotate(num_lecture=Count('lecture_name')).order_by(
-#         '-num_lecture')
-#     # 가장 많은 제목의 강의들의 강의명과 링크를 반환
-
-#     lec_name = video_views.values('lecture_name')[:3]
-#     lec_url = video_views.values('lecture_url')[:3]
-
-#     for k, v in zip(lec_name, lec_url):
-#         top3[list(k.values())[0]] = list(v.values())[0]
-#     return 1
-# return render(request, 'recommandation.html', top3)
 
 
 @csrf_exempt
@@ -223,13 +212,14 @@ def summary(request):  ## 요약문 생성 버튼을 위한 메소드
     if request.method == 'POST':
         # 요약문 생성
         sum_text = summary_text(text_alls[-1], models_sum[-1], tokens_sum[-1])
+        sum_texts.append(sum_text)
         print(sum_text)
 
-        sum_texts.append(sum_text)
         # 웹으로 보낼 데이터
         result = {
             "sum_text": sum_text
         }
+
     return JsonResponse(result)
 
 
@@ -239,8 +229,11 @@ def keytext(request):  # 키워드 추출을 위한 메소드
 
         # 키버트 활용
         text_re = request.POST['text']
-        print(text_re)
         key_dict = key_question(text_re, models_key[-1])
+
+        # 동글이 출력
+        plot = plot_keywords(key_dict)
+        plot_html = '<img src="data:image/png;base64, {}">'.format(plot)
 
         # 키워드 추출
         keywords = ''
@@ -252,12 +245,14 @@ def keytext(request):  # 키워드 추출을 위한 메소드
             count += 1
         print(keywords)
         hash_tags.append(hash_tag)
+
         # 웹으로 보낼 데이터
         result = {
             "keyword": keywords,
             "sentence_blank": key_dict["sentence_blank"] + '<br><br><br><br>',
             "sentence": key_dict["sentence"] + '<br><br>',
-            "answer": key_dict["answer"]
+            "answer": key_dict["answer"],
+            "plot_html": plot_html
         }
     return JsonResponse(result)
 
@@ -267,58 +262,28 @@ def savedb(request):  # DB 저장을 위한 메소드
     if request.method == 'POST':
         if request.user.is_authenticated:
             print(request.user)
-            ## history
-            # history = .all()
+            ## history 내에 데이터 있는지 확인 후 없으면 생성
             history, cre = LectureHistory.objects.get_or_create(id=str(request.user) + '_' + str(movie_titles[-1]),
-                                                                user_id = request.user)
+                                                                user_id=request.user, created_at = timezone.now())
 
-            if cre == False:
-                history.created_at = timezone.now()
-                try:
-                    history.lecture_name = movie_titles[-1]
-                    history.embed_url = embed_urls[-1]
-                    history.lecture_url = movie_urls[-1]
-                    history.id_url = movie_ids[-1]
-                    history.lecture_note = text_alls[-1]
-                    history.lecture_sum = sum_texts[-1]
-                    history.keyword = hash_tags[-1]
-                    history.update_at = timezone.now()
-                    history.created_at = timezone.now()
-                    history.save()
-                except:
-                    history.lecture_name = movie_titles[-1]
-                    history.embed_url = embed_urls[-1]
-                    history.lecture_url = movie_urls[-1]
-                    history.id_url = movie_ids[-1]
-                    history.lecture_note = " "
-                    history.lecture_sum = " "
-                    history.keyword = " "
-                    history.update_at = timezone.now()
-                    history.created_at = timezone.now()
-                    history.save()
-            else:
-                try:
-                    history.lecture_name = movie_titles[-1]
-                    history.embed_url = embed_urls[-1]
-                    history.lecture_url = movie_urls[-1]
-                    history.id_url = movie_ids[-1]
-                    history.lecture_note = text_alls[-1]
-                    history.lecture_sum = sum_texts[-1]
-                    history.keyword = hash_tags[-1]
-                    history.update_at = timezone.now()
-                    history.created_at = timezone.now()
-                    history.save()
-                except:
-                    history.lecture_name = movie_titles[-1]
-                    history.embed_url = embed_urls[-1]
-                    history.lecture_url = movie_urls[-1]
-                    history.id_url = movie_ids[-1]
-                    history.lecture_note = " "
-                    history.lecture_sum = " "
-                    history.keyword = " "
-                    history.update_at = timezone.now()
-                    history.created_at = timezone.now()
-                    history.save()
+            history.lecture_name = movie_titles[-1]
+            history.embed_url = embed_urls[-1]
+            history.lecture_url = movie_urls[-1]
+            history.id_url = movie_ids[-1]
+            history.update_at = timezone.now()
+
+            ## 해당 아이디에 해당하는 데이터 입력
+            try:
+                history.lecture_note = text_alls[-1]
+                history.lecture_sum = sum_texts[-1]
+                history.keyword = hash_tags[-1]
+                history.save()
+            except:
+                history.lecture_note = " "
+                history.lecture_sum = " "
+                history.keyword = " "
+                history.save()
+
             return HttpResponse("!!DB 저장 완료!!")
         else:
             return HttpResponse("!!로그인 필요!!")
@@ -329,7 +294,7 @@ def board(request):  # 게시판 출력을 위한 메소드
 
     page = request.GET.get('page', '1')  # 페이지
 
-    question_list = LectureHistory.objects.order_by('id')
+    question_list = LectureHistory.objects.order_by('-update_at')
     paginator = Paginator(question_list, 10)  # 페이지당 10개씩
     page_obj = paginator.get_page(page)
     context = {'lecture_list': page_obj}
@@ -338,7 +303,7 @@ def board(request):  # 게시판 출력을 위한 메소드
 
 @csrf_exempt
 def history_result(request, id):  # 게시판 결과물을 위한 메소드
-
+    # id를 pk로 가지고 오기
     history_lecture = get_object_or_404(LectureHistory, pk=id)
     context = {'history_lecture': history_lecture}
 
@@ -387,3 +352,13 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('index')
+
+# @csrf_exempt
+# def test(request):
+#     if request.method == 'POST':
+#         # 키버트 활용
+#         text_re = request.POST['text']
+#         key_dict = key_question(text_re, models_key[-1])
+#
+#         plot = plot_keywords(key_dict)
+#     return HttpResponse(plot)

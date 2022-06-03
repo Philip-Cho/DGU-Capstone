@@ -10,6 +10,8 @@ import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
 from io import BytesIO
+import base64
+
 
 # 2) Preprocess the sentences
 def preprocess_sents(sentences, stop_words):
@@ -68,6 +70,7 @@ def get_keysents(sorted_sent_idx, sentences, sent_num=2):
 
     return keysents
 
+
 # 6) Final: Get the sentence with blank, answer sentence, answer word
 def keysents_blank(keywords: list, keysents: list):
     keysent = ''  # blank 만들 keysent
@@ -118,16 +121,18 @@ def keysents_blank_rd(keywords: list, keysents: list):
 
     return qas[random_idx]
 
+
 def postprocess_keywords(keywords):
     for kw in keywords:
-        if len(kw)<5 or kw not in keywords:
+        if len(kw) < 5 or kw not in keywords:
             continue
         idx = keywords.index(kw)
-        n_gram = int(len(kw)*0.7)   # n_gram: 단어의 70% 이상 겹치면 out
-        window = [kw[i:i+n_gram] for i in range(len(kw)-n_gram+1)]
+        n_gram = int(len(kw) * 0.7)  # n_gram: 단어의 70% 이상 겹치면 out
+        window = [kw[i:i + n_gram] for i in range(len(kw) - n_gram + 1)]
         for w in window:
-            keywords = keywords[:idx+1] + [keyword for keyword in keywords[idx+1:] if w not in keyword]
+            keywords = keywords[:idx + 1] + [keyword for keyword in keywords[idx + 1:] if w not in keyword]
     return keywords[:10]
+
 
 def load_key_model():
     model = KeyBERT('all-MiniLM-L12-v2')
@@ -153,7 +158,7 @@ def plot_keywords(key_dict=dict):
                  verticalalignment='center',
                  horizontalalignment='center',
                  s=df.loc[i, 'keywords'],
-                 fontdict={'color':'white', 'size':df.loc[i, 'weights']*50})
+                 fontdict={'color': 'white', 'size': df.loc[i, 'weights'] * 50})
     #     plt.bar(x=weights, height=keywords)
     #     sns.barplot(x=weights, y=keywords, palette='Reds')
     sns.scatterplot(x, y, alpha=0.6, linewidth=0,
@@ -164,8 +169,10 @@ def plot_keywords(key_dict=dict):
     plt.savefig(plot_file, format='png')
     plt.legend([], [], frameon=False)
     encoded_file = plot_file.getvalue()
-
+    encoded_file = base64.b64encode(encoded_file)
+    encoded_file = encoded_file.decode('utf-8')
     return encoded_file
+
 
 def key_question(text_all, model):
     sent_ngram = 2
@@ -202,4 +209,3 @@ def key_question(text_all, model):
     qa['weights'] = weights
 
     return qa  # return qa, keywords : 데이터 적재시
-
