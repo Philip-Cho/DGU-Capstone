@@ -152,22 +152,29 @@ def plot_keywords(key_dict=dict):
     plt.tick_params(left=False, right=False, labelleft=False,
                     labelbottom=False, bottom=False)
     sns.despine(bottom=True, left=True)
-    fontdict = {'color': 'white'}
+
     for i in range(10):
+        if df.loc[i,'weights']* 50 < 10:
+           fontdict={'color':'white', 'size':df.loc[i,'weights'] * 100}
+        else:
+            fontdict={'color':'white', 'size':df.loc[i,'weights'] * 50}
         plt.text(x=x[i], y=y[i],
                  verticalalignment='center',
                  horizontalalignment='center',
                  s=df.loc[i, 'keywords'],
-                 fontdict={'color': 'white', 'size': df.loc[i, 'weights'] * 50})
+                 fontdict=fontdict)
     #     plt.bar(x=weights, height=keywords)
     #     sns.barplot(x=weights, y=keywords, palette='Reds')
     sns.scatterplot(x, y, alpha=0.6, linewidth=0,
-                    s=[w * 50000 for w in weights], hue=weights, palette='coolwarm')
-    plt.xlim(-2, 12)
-    plt.ylim(-2, 12)
+                    s=[w*80000 for w in weights],
+                    hue=weights,
+                    palette='Paired')  #coolwarm, Paired, flare, rocket
+    plt.xlim(-3,13)
+    plt.ylim(-3,13)
+    plt.legend([], [], frameon=False)
+
     plot_file = BytesIO()
     plt.savefig(plot_file, format='png')
-    plt.legend([], [], frameon=False)
     encoded_file = plot_file.getvalue()
     encoded_file = base64.b64encode(encoded_file)
     encoded_file = encoded_file.decode('utf-8')
