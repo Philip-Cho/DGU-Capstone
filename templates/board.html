@@ -52,7 +52,7 @@
                 <table>
                     <thead>
                     <tr>
-                        <th>강의 제목</th>
+                        <th style="text-align: center"><span style="color: #0d6efd; font-size: large; font-weight: bold;">{{ user.username }}</span>님의 강의 목록</th>
                     </tr>
                     </thead>
                     {% if lecture_list %}
@@ -66,9 +66,9 @@
                                     </h4></td>
                             </tr>
                             <tr>
-                            <td style="text-align: right;">{{ lecture.keyword }}저장 일시: {{ lecture.created_at }}</td>
+                                <td style="text-align: right;">{{ lecture.keyword }}저장 일시: {{ lecture.created_at }}</td>
+                            </tr>
                         {% endfor %}
-                    </tr>
                     {% else %}
                         <tr>
                             <td colspan="4">강의가 없습니다.</td>
