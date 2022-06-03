@@ -294,7 +294,7 @@ def board(request):  # 게시판 출력을 위한 메소드
 
     page = request.GET.get('page', '1')  # 페이지
 
-    question_list = LectureHistory.objects.order_by('-update_at')
+    question_list = LectureHistory.objects.filter(user_id=request.user).order_by('-update_at')
     paginator = Paginator(question_list, 10)  # 페이지당 10개씩
     page_obj = paginator.get_page(page)
     context = {'lecture_list': page_obj}
