@@ -9,6 +9,7 @@ from django.db.models import Count
 
 from caffeine.forms import RegisterForm
 
+import time
 import os, os.path
 import pyautogui
 
@@ -88,6 +89,7 @@ def result(request):  # 결과물 페이지(주소 입력 -> STT,요약등 결�
 
         # 동영상 이름 추출
         movie_title = down_title(movie_url).replace(":", " -")
+        movie_title = down_title(movie_url).replace("|", "_")
         movie_titles.append(movie_title)
 
         # 파일 이름 정의
@@ -125,6 +127,8 @@ def text(request):  # STT 버튼 호출시 실행
         # 동영상 스토리지 업로드
         upload_blob_from_memory("dgu_dsc_stt", file_path, contents[-1])
 
+        #시간 측정
+        start_time = time.time()
         # 동영상 STT
         gcs_url = "gs://dgu_dsc_stt/"  # 스토리지 path
         gcs_file = gcs_url + contents[-1]  # 스토리지 내 동영상 path
@@ -132,10 +136,12 @@ def text(request):  # STT 버튼 호출시 실행
             text_all = transcribe_gcs(gcs_file, contents[-1], 44100)
         except:  # STT
             text_all = transcribe_gcs(gcs_file, contents[-1], 48000)
+        end_time = time.time()
 
         # 텍스트 할당
         text_alls.append(text_all)
         print(text_all)
+        print("!!STT 소요시간!! : ",round((end_time - start_time), 4))
 
         # 웹으로 보낼 데이터
         gen = {
