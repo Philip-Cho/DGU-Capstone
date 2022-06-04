@@ -222,15 +222,15 @@
                     <div class="box">
                         <div class="h-100 p-5 text-white bg-dark rounded-3">
                             <h2>빈칸 문제</h2>
-                            <div id="loading4" style="margin-left: 0px; display: none;">
+                            <div class="box" id="loading4" style="margin-left: 0px; display: none;">
                                 <h4>문제 생성중...</h4>
                             </div>
-                            <div id="exercise" style="margin-left: 0px; display: none;">
+                            <div class="box" id="exercise" style="margin-left: 0px; display: none;">
                             </div>
                             <button id="button4" class="btn btn-outline-secondary" onclick="showanswer()"
                                     type="button" style="display: none;">4. 정답확인
                             </button>
-                            <div id="answer" style="margin-left: 0px; display: none;"></div>
+                            <div class="box" id="answer" style="margin-left: 0px; display: none;"></div>
                         </div>
                     </div>
                     <button id="button_save" class="button" onclick="savedb()" type="button">4.저장</button>
@@ -311,10 +311,17 @@
             $('#keyword').show();
             $('#keyword').html(response.keyword);
             $('#plot_box').html(response.plot_html);
-            $('#exercise').html(response.sentence_blank);
+            $('#exercise').html("<p>1번 문제: " + response.sentence_blank1 + "</p>");
+            $('#exercise').append("<p>2번 문제: " + response.sentence_blank2 + "</p>");
+            $('#exercise').append("<p>3번 문제: " + response.sentence_blank3 + "</p>");
+            $('#exercise').append("<p>4번 문제: " + response.sentence_blank4 + "</p>");
+            $('#exercise').append("<p>5번 문제: " + response.sentence_blank5 + "</p>");
             $('#exercise').show();
-            $('#answer').html(response.sentence);
-            $('#answer').append(response.answer);
+            $('#answer').html("<p>1번 답:&nbsp"+response.answer1 +"<br>"+ response.sentence1 + "</p>");
+            $('#answer').append("<p>2번 답:&nbsp"+response.answer2 +"<br>"+ response.sentence2 + "</p>");
+            $('#answer').append("<p>3번 답:&nbsp"+response.answer3 +"<br>"+ response.sentence3 + "</p>");
+            $('#answer').append("<p>4번 답:&nbsp"+response.answer4 +"<br>"+ response.sentence4 + "</p>");
+            $('#answer').append("<p>5번 답:&nbsp"+response.answer5 +"<br>"+ response.sentence5 + "</p>");
             $('#button3').hide();
             $('#button4').show();
         });

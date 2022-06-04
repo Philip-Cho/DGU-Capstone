@@ -257,9 +257,21 @@ def keytext(request):  # 키워드 추출을 위한 메소드
         # 웹으로 보낼 데이터
         result = {
             "keyword": keywords,
-            "sentence_blank": key_dict["sentence_blank"] + '<br><br><br><br>',
-            "sentence": key_dict["sentence"] + '<br><br>',
-            "answer": key_dict["answer"],
+            "sentence_blank1": key_dict["sentence_blank1"],
+            "sentence1": key_dict["sentence1"],
+            "answer1": key_dict["answer1"],
+            "sentence_blank2": key_dict["sentence_blank2"],
+            "sentence2": key_dict["sentence2"],
+            "answer2": key_dict["answer2"],
+            "sentence_blank3": key_dict["sentence_blank3"],
+            "sentence3": key_dict["sentence3"],
+            "answer3": key_dict["answer3"],
+            "sentence_blank4": key_dict["sentence_blank4"],
+            "sentence4": key_dict["sentence4"],
+            "answer4": key_dict["answer4"],
+            "sentence_blank5": key_dict["sentence_blank5"],
+            "sentence5": key_dict["sentence5"],
+            "answer5": key_dict["answer5"],
             "plot_html": plot_html
         }
     return JsonResponse(result)
