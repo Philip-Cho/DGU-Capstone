@@ -119,7 +119,12 @@
                                     url: 'http://127.0.0.1:8000/caffeine/code_to_text/',
                                     method: 'POST',
                                     }).then(function (response) {
-                                        $('#code_box').html(response[1]);
+                                        $('#code_box').html(response[2]);
+                                        // var code_text = '';
+                                        // for ( var i = 0 ; i<4 ; i++ ){
+                                        //      code_text = code_text + response[i];
+                                        // }
+                                        // $('#code_box').html(code_text);
                                     });
                             } //codetotext()끝
                         </script>
