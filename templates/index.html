@@ -66,16 +66,9 @@
                 </header>
                 <div class="posts">
                     {% for lec in recommend %}
-                    <article>
-                        <form action="http://127.0.0.1:8000/caffeine/result/" method="POST">
-                            <a href="#" class="image"><img src="http://img.youtube.com/vi/{{lec.id_url}}/mqdefault.jpg" alt="thumbnail"></a>
-
-                            <h3>{{ lec.lecture_name }}</h3>
-                            <input type="text" id="input" name="address" value="{{ lec.lecture_url }}"
-                                   style='display : none; float : left; width : 70%; margin-right:  2%'>
-                            <input type="submit" value="요약보기" class='primary'
-                                                                         style='display : inline-block; float : left;'>
-                        </form>
+                    <article href="http://127.0.0.1:8000/caffeine/{{lec.id}}/">
+                        <a href="http://127.0.0.1:8000/caffeine/{{lec.id}}/" class="image"><img src="http://img.youtube.com/vi/{{lec.id_url}}/mqdefault.jpg" alt="thumbnail"></a>
+                        <h3><a href="http://127.0.0.1:8000/caffeine/{{lec.id}}/"> {{ lec.lecture_name }}</a></h3>
                     </article>
                     {% endfor %}
                 </div>
