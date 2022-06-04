@@ -160,7 +160,7 @@ def text(request):  # STT 버튼 호출시 실행
 
 # 이미지 캡쳐
 @csrf_exempt
-def capture(request):
+def getxy(request):
     if request.method == 'POST':
         count = 1
         # 좌표값

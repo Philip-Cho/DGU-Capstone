@@ -111,7 +111,7 @@
 
                 </div>
                 <!--                종수 캡쳐 버튼 시작-->
-                <button id="capture_button" class="button" onclick="seongtaek()" type="button">캡쳐</button>
+                <button id="capture_button" class="button" onclick="getxy()" type="button">캡쳐</button>
                 <input type="button" value="캡쳐드래그" id="edit"/>
                 <!--                캡쳐 이벤트 처리를 위한 요소-->
                 <div id="screenshot">
@@ -438,8 +438,8 @@
 
         var target = document.getElementById("youtube");
 
-        var y_up = window.scrollX + target.getBoundingClientRect().top;
-        var y_down = window.scrollY + target.getBoundingClientRect().bottom;
+        var y_up = window.pageYOffset + target.getBoundingClientRect().top;
+        var y_down = window.pageYOffset +  target.getBoundingClientRect().bottom;
         var x_left = target.getBoundingClientRect().left;
         var x_right = target.getBoundingClientRect().right;
 
@@ -454,9 +454,9 @@
         // let x_left = $('#youtube').offset().left;
         console.log(window.pageYOffset, x_left, y_up, x_right, y_down);
         $.ajax({
-            url: 'http://127.0.0.1:8000/caffeine/capture/',
+            url: 'http://127.0.0.1:8000/caffeine/getxy/',
             method: 'POST',
-            data: {'x_left': x_left, 'y_up': y_up, 'x_right': x_right, 'y_down': y_down}
+            data : {'x_left': x_left, 'y_up': y_up, 'x_right': x_right, 'y_down':y_down}
         }).then(function (response) {
             alert(response)
         });

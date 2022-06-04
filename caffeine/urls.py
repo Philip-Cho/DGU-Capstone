@@ -11,6 +11,6 @@ urlpatterns = [
     path('model/', views.model),
     path('board/', views.board),
     path('savedb/', views.savedb),
+    path('getxy/', views.getxy),
     path('<str:id>/', views.history_result),
-    path('capture/', views.capture),
 ]
