@@ -49,7 +49,8 @@ code_imgs = list()
 def index(request):  ## 인덱스 페이지(주소창 있는 화면)
     # 메인페이지 강의 추천을 위한 DB READ
     # lecture_name에 따라 count를 한 후
-    video_views = LectureHistory.objects.values('lecture_name', 'lecture_url', 'id_url').annotate(
+    video_views = LectureHistory.objects.values('id',
+                                                'lecture_name', 'lecture_url', 'id_url').annotate(
         num_lecture=Count('lecture_name')).order_by(
         '-num_lecture')
     # 가장 많은 제목의 강의들의 강의명과 링크를 반환
