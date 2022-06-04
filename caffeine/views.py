@@ -6,6 +6,7 @@ from django.core.paginator import Paginator
 from django.utils import timezone
 from django.contrib.auth.forms import AuthenticationForm
 from django.db.models import Count
+from regex import P
 
 from caffeine.forms import RegisterForm
 
@@ -208,9 +209,15 @@ def code_to_text(request):
             code_text = text_detection(img_path)
         print(code_text)
 
+        # gen = {}
+        # for idx, code in enumerate(code_text):
+        #     gen[idx] = code
         gen = {}
-        for idx, code in enumerate(code_text):
-            gen[idx] = code
+        code_str = ''
+        for sentence in code_text:
+            code_str = code_str + sentence + '\n'
+        gen[0] = code_str
+        print(gen)
 
     return JsonResponse(gen)
 
