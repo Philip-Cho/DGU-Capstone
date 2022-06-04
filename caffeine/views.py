@@ -248,7 +248,7 @@ def keytext(request):  # 키워드 추출을 위한 메소드
         count = 1
         for i in key_dict["keywords"]:
             keywords += str(count) + '순위 : ' + str(i) + '<br>'
-            hash_tag += '# ' + str(i) + ',  '
+            hash_tag += '#' + str(i) + ' '
             count += 1
         print(keywords)
         hash_tags.append(hash_tag)
