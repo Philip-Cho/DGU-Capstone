@@ -180,6 +180,7 @@ def getxy(request):
 def get_code_imgs(path):
     file_list = os.listdir(path)
     code_imgs = sorted(file_list)
+    return code_imgs
 
 
 @csrf_exempt
@@ -188,11 +189,12 @@ def code_to_text(request):
 
         # 이미지 경로 탐색
         path = os.getcwd()
-        print(path)
+        #폴더 경로 탐색
         folder_codes = "codes"
-        get_code_imgs(path + '/' + folder_codes)
+        folder_path = os.path.join(path, folder_codes)
+        # 폴더에 있는 이미지 경로 탐색
+        code_imgs = get_code_imgs(folder_path)
         img_path = os.path.join(path, folder_codes, code_imgs[-1])
-        print(img_path)
         code_text = list()
 
         """
@@ -204,13 +206,11 @@ def code_to_text(request):
         except:
             print('no code text detected')
             code_text = text_detection(img_path)
-
         print(code_text)
 
         gen = {}
         for idx, code in enumerate(code_text):
             gen[idx] = code
-
 
     return JsonResponse(gen)
 
