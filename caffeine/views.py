@@ -211,6 +211,7 @@ def code_to_text(request):
         for idx, code in enumerate(code_text):
             gen[idx] = code
 
+
     return JsonResponse(gen)
 
 

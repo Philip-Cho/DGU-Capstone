@@ -110,7 +110,7 @@
                         </span>
                         <button id="capture_button" class="button" onclick="getxy()" type="button">캡쳐</button>
                         <button id="img_to_text" class="button" onclick="code_to_text()" type="button">변환</button>
-                        <div id="codes">
+                        <div id="code_box">
 
                         </div>
                         <script>
@@ -119,14 +119,13 @@
                                     url: 'http://127.0.0.1:8000/caffeine/code_to_text/',
                                     method: 'POST',
                                     }).then(function (response) {
-                                        $('#codes').show();
-                                        $('#codes').html(response);
+                                        $('#code_box').html(response[1]);
                                     });
                             } //codetotext()끝
                         </script>
-<!--                        <div id="screenshot">-->
+                        <div id="screenshot">
 
-<!--                        </div>-->
+                        </div>
 
                 </div>
 
