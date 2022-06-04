@@ -117,9 +117,15 @@ def keysents_blank_rd(keywords: list, keysents: list):
                 qa = {'sentence_blank': sent_blank, 'sentence': keysent, 'answer': word}
                 qas.append(qa)
 
-    random_idx = random.randint(0, len(qas) - 1)
+    random.shuffle(qas)  # random!
 
-    return qas[random_idx]
+    qas_5 = {}
+    for i in range(5):
+        qas_5['sentence_blank{}'.format(i + 1)] = qas[i]['sentence_blank']
+        qas_5['sentence{}'.format(i + 1)] = qas[i]['sentence']
+        qas_5['answer{}'.format(i + 1)] = qas[i]['answer']
+
+    return qas_5
 
 
 def postprocess_keywords(keywords):
