@@ -48,7 +48,7 @@
             <!--                content -->
             <section>
                 <!--				새로운 컨텐츠 넣을 때 이 곳에 요소들을 추가한다. 나머지는 틀-->
-                <b>야 너두 영어로 수업 들을 수 있어!!!</b>
+                <h3>야 너두 영어로 수업 들을 수 있어!!!</h3>
                 <div id='col-6 col-12-small'>
                     <form action="http://127.0.0.1:8000/caffeine/result/" method="POST">
                         <input type="text" id="input" name="address" placeholder="유튜브 주소 입력"
@@ -59,21 +59,18 @@
                 </div>
                 <!--            section content end-->
             </section>
-
-            <section>
-                <header class="major">
-                    <h2>회원들이 가장 많이 본 강의</h2>
+                <header style="margin-top: 3%">
+                    <h4>회원들이 가장 많이 본 강의</h4>
                 </header>
                 <div class="posts">
                     {% for lec in recommend %}
                     <article href="http://127.0.0.1:8000/caffeine/{{lec.id}}/">
                         <a href="http://127.0.0.1:8000/caffeine/{{lec.id}}/" class="image"><img src="http://img.youtube.com/vi/{{lec.id_url}}/mqdefault.jpg" alt="thumbnail"></a>
-                        <h3><a href="http://127.0.0.1:8000/caffeine/{{lec.id}}/"> {{ lec.lecture_name }}</a></h3>
+                        <h5><a href="http://127.0.0.1:8000/caffeine/{{lec.id}}/"> {{ lec.lecture_name }}</a></h5>
                     </article>
                     {% endfor %}
                 </div>
-            </section>
-                    <!-- inner end -->
+        <!-- inner end -->
         </div>
         <!--main end-->
     </div>

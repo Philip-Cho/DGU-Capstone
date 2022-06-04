@@ -29,7 +29,7 @@ def process_text(pre_summary):
         summary = summary.replace('we propose', 'this lecture is about')
         summary = summary.replace('we present', 'this lecture is about')
     if 'in this paper' in summary:
-        summary = summary.replace('in this course')
+        summary = summary.replace('in this paper', 'in this course')
 
     ## 공백 처리(마침표/쉼표 앞뒤 공백), 대문자 변경(문장 첫문자 소문자)
     # 마침표 기준으로 문장 나눠주기
