@@ -124,6 +124,7 @@ def keysents_blank_rd(keywords: list, keysents: list):
         qas_5['sentence_blank{}'.format(i + 1)] = qas[i]['sentence_blank']
         qas_5['sentence{}'.format(i + 1)] = qas[i]['sentence']
         qas_5['answer{}'.format(i + 1)] = qas[i]['answer']
+        print(qas_5)
 
     return qas_5
 
