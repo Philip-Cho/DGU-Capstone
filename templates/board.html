@@ -61,11 +61,12 @@
                         {% for lecture in lecture_list %}
                             <tbody>
                             <tr>
-                                <td>
+                                <td colspan="2">
 <!--                                    {#<img src="http://img.youtube.com/vi/{{lecture.id_url}}/mqdefault.jpg" alt="thumbnail">#}-->
                                     <h4 style="margin: 0;"><a
                                             href="http://127.0.0.1:8000/caffeine/{{ lecture.id }}/">{{ lecture.lecture_name }}</a>
-                                    </h4></td>
+                                    </h4>
+                                </td>
                             </tr>
                             <tr>
                                 <td style="text-align: left;">{{ lecture.keyword }}</td>
