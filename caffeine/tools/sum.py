@@ -100,6 +100,8 @@ def summary_text(text, model, tokenizer, max_length=100):
 
 def sum_model_load():
     print("모델 로드 시작")
-    model = BartForConditionalGeneration.from_pretrained("facebook/bart-large-cnn")
-    tokenizer = BartTokenizer.from_pretrained("facebook/bart-large-cnn")
+    path = os.getcwd()
+
+    model = BartForConditionalGeneration.from_pretrained(os.path.join(path, "bart_model/finetuning_cnn_pubmed_arxiv"),use_auth_token=True)
+    tokenizer = BartTokenizer.from_pretrained(os.path.join(path, "bart_model/tokenizer"),use_auth_token=True)
     return model, tokenizer

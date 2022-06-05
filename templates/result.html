@@ -42,12 +42,12 @@
             </header>
             <!--                content -->
             <section>
-<!--id = video start-->
-<!--            좌 우 품을 행 시작-->
-                <div class = "row">
-<!--            좌측 div 시작-->
-                    <div class = "col-6 col-12-small" style="width: 70%;">
-                        <span id="video" >
+                <!--id = video start-->
+                <!--            좌 우 품을 행 시작-->
+                <div class="row">
+                    <!--            좌측 div 시작-->
+                    <div class="col-6 col-12-small" style="width: 70%;">
+                        <span id="video">
                             <h3> Lecture Name : <span style="color:#ff3e33">{{ movie_title }}<span>  </h3>
                             <iframe id="youtube" width="100%" height="500" src={{ embed_url }} title = "YouTube video player"
                                     frameborder="0"
@@ -55,27 +55,29 @@
                                     allowfullscreen></iframe>
 
                         </span>
-        <!--                video end-->
+                        <!--                video end-->
                     </div>
-<!--                 비디오 오른쪽에 배치할 div-->
-                <div class = "col-6 col-12-small" style="width: 30%; height : 600px; overflow:auto;">
-                    <button id="img_to_text" class="button small" onclick="code_to_text()" type="button">캡쳐&변환</button>
-                    <pre>
-                    <code id="code" style = "height: 500px;"><!-- text변환한거 띄울 div-->
+                    <!--                 비디오 오른쪽에 배치할 div-->
+                    <div class="col-6 col-12-small" style="width: 30%; height : 600px; overflow:auto;">
+                        <button id="img_to_text" class="button small" onclick="code_to_text()" type="button">캡쳐&변환
+                        </button>
+                        <pre>
+                    <code id="code" style="height: 500px;"><!-- text변환한거 띄울 div-->
                      </code> <!--code_box end-->
                     </pre>
-                </div> <!-- 오른쪽 div end-->
+                    </div> <!-- 오른쪽 div end-->
 
                 </div> <!--row div end-->
                 <script>
-                        function code_to_text() {
-                            $.ajax({
-                                url: 'http://127.0.0.1:8000/caffeine/code_to_text/',
-                                method: 'POST',
-                                }).then(function (response) {
-                                    $('#code').prepend(response[0]);
-                                });
-                        } //codetotext()끝
+                    function code_to_text() {
+                        $.ajax({
+                            url: 'http://127.0.0.1:8000/caffeine/code_to_text/',
+                            method: 'POST',
+                        }).then(function (response) {
+                            $('#code').prepend(response[0]);
+                            $('#code').prepend("<p>====================================================================</p>");
+                        });
+                    } //codetotext()끝
                 </script>
                 <div class="box">
                     <div class="box">
@@ -100,7 +102,7 @@
                                         $('#textall').show();
                                         $('#textall').html(response.text_all);
                                         $('#textall').css("height", "768px");
-                                        $('#textall').css("overflow" , "auto");
+                                        $('#textall').css("overflow", "auto");
                                         $('#button1').hide();
                                     });
                                 }
@@ -144,11 +146,7 @@
                             <div id="loading3" style="margin-left: 0px; display: none;">
                                 <h4>키워드 추출중...</h4>
                             </div>
-<!--{#                            <div id="keyword" style="margin-left: 0px; display: none;">#}-->
-<!--{#                            </div>#}-->
-<!--{#                            <div id="plot_box" class="box" style="width: 80%;">#}-->
-                                {# 동글이 자리#}
-<!--{#                            </div>#}-->
+
                             <button id="button3" class="button" onclick="keytext()" type="button">
                                 3.키워드 추출
                             </button>
@@ -196,7 +194,7 @@
                 <ul>
                     <li><a href="http://127.0.0.1:8000/caffeine/">NEW SUMMARIZE</a></li>
                     <li><a href="http://127.0.0.1:8000/caffeine/board/">HISTORY</a></li>
-{#                    <li><a href="#">??</a></li>#}
+                    {#                    <li><a href="#">??</a></li>#}
 
                 </ul>
             </nav>
@@ -244,17 +242,17 @@
             $('#keyword').show();
             $('#keyword').html(response.keyword);
             $('#plot_box').html(response.plot_html);
-            $('#exercise').html("<p>1번 문제: " + response.sentence_blank1 + "</p>");
-            $('#exercise').append("<p>2번 문제: " + response.sentence_blank2 + "</p>");
-            $('#exercise').append("<p>3번 문제: " + response.sentence_blank3 + "</p>");
-            $('#exercise').append("<p>4번 문제: " + response.sentence_blank4 + "</p>");
-            $('#exercise').append("<p>5번 문제: " + response.sentence_blank5 + "</p>");
+            $('#exercise').html("<p>Q1. <br>" + response.sentence_blank1 + "</p>");
+            $('#exercise').append("<p>Q2. <br>" + response.sentence_blank2 + "</p>");
+            $('#exercise').append("<p>Q3. <br>" + response.sentence_blank3 + "</p>");
+            $('#exercise').append("<p>Q4. <br>" + response.sentence_blank4 + "</p>");
+            $('#exercise').append("<p>Q5. <br>" + response.sentence_blank5 + "</p>");
             $('#exercise').show();
-            $('#answer').html("<p>1번 답:&nbsp"+response.answer1 +"<br>"+ response.sentence1 + "</p>");
-            $('#answer').append("<p>2번 답:&nbsp"+response.answer2 +"<br>"+ response.sentence2 + "</p>");
-            $('#answer').append("<p>3번 답:&nbsp"+response.answer3 +"<br>"+ response.sentence3 + "</p>");
-            $('#answer').append("<p>4번 답:&nbsp"+response.answer4 +"<br>"+ response.sentence4 + "</p>");
-            $('#answer').append("<p>5번 답:&nbsp"+response.answer5 +"<br>"+ response.sentence5 + "</p>");
+            $('#answer').html("<p>A1.&nbsp" + response.answer1 + "<br>" + response.sentence1 + "</p>");
+            $('#answer').append("<p>A2.&nbsp" + response.answer2 + "<br>" + response.sentence2 + "</p>");
+            $('#answer').append("<p>A3.&nbsp" + response.answer3 + "<br>" + response.sentence3 + "</p>");
+            $('#answer').append("<p>A4.&nbsp" + response.answer4 + "<br>" + response.sentence4 + "</p>");
+            $('#answer').append("<p>A5.&nbsp" + response.answer5 + "<br>" + response.sentence5 + "</p>");
             $('#button3').hide();
             $('#button4').show();
         });
@@ -273,37 +271,6 @@
         });
     } //save db끝
 
-    function getxy() {
-
-        var target = document.getElementById("youtube");
-
-        var y_up = window.pageYOffset + target.getBoundingClientRect().top;
-        var y_down = window.pageYOffset +  target.getBoundingClientRect().bottom;
-        var x_left = target.getBoundingClientRect().left;
-        var x_right = target.getBoundingClientRect().right;
-
-        // var y_up = target.getBoundingClientRect().top;
-        // var y_down = target.getBoundingClientRect().bottom;
-        // var x_left = target.getBoundingClientRect().left;
-        // var x_right = target.getBoundingClientRect().right;
-
-        // let y_up = $('#youtube').offset().top;
-        // let y_down = $('#youtube').offset().top + $('#youtube').outerHeight();
-        // let x_right = $('#youtube').offset().left + $('#youtube').outerWidth();
-        // let x_left = $('#youtube').offset().left;
-        console.log(window.pageYOffset, x_left, y_up, x_right, y_down);
-        $.ajax({
-            url: 'http://127.0.0.1:8000/caffeine/getxy/',
-            method: 'POST',
-            data : {'x_left': x_left, 'y_up': y_up, 'x_right': x_right, 'y_down':y_down}
-        }).then(function (response) {
-            alert(response)
-        });
-
-    } //getxy 끝
-</script>
-
-<script>
     function showanswer() {
         $('#answer').show();
         $('#button4').hide();

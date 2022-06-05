@@ -11,7 +11,6 @@ urlpatterns = [
     path('model/', views.model),
     path('board/', views.board),
     path('savedb/', views.savedb),
-    path('getxy/', views.getxy),
     path('code_to_text/', views.code_to_text),
     path('<str:id>/', views.history_result),
 ]

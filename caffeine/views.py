@@ -51,8 +51,7 @@ code_imgs = list()
 def index(request):  ## 인덱스 페이지(주소창 있는 화면)
     # 메인페이지 강의 추천을 위한 DB READ
     # lecture_name에 따라 count를 한 후
-    video_views = LectureHistory.objects.values('id',
-                                                'lecture_name', 'lecture_url', 'id_url').annotate(
+    video_views = LectureHistory.objects.values('lecture_name', 'lecture_url', 'id_url').annotate(
         num_lecture=Count('lecture_name')).order_by(
         '-num_lecture')
     # 가장 많은 제목의 강의들의 강의명과 링크를 반환
@@ -152,34 +151,6 @@ def text(request):  # STT 버튼 호출시 실행
     return JsonResponse(gen)
 
 
-# @csrf_exempt
-# def imgpost(request):
-#     if request.method == 'POST':
-#         print(request.POST['img'])
-#
-#     return HttpResponse("이미지 불러오기")
-
-# 이미지 캡쳐
-@csrf_exempt
-def getxy(request):
-    if request.method == 'POST':
-        count = 1
-        # 좌표값
-        # x_left = float(request.POST['x_left'])
-        # y_up = float(request.POST['y_up'])
-        # x_right = float(request.POST['x_right'])
-        # y_down = float(request.POST['y_down'])
-        x_left = float(88)
-        y_up = float(295)
-        x_right = float(1214)
-        y_down = float(640)
-
-        print(x_left, y_up, x_right, y_down)
-        pyautogui.screenshot('./img/{}.png'.format(count), region=(x_left, y_up, x_right, y_down))
-
-    return HttpResponse("캡쳐완료")
-
-
 # codes 폴더에 있는 모든 이미지 캡처 순서대로 정렬 후 불러오기
 @csrf_exempt
 def get_code_imgs(path):
@@ -220,7 +191,7 @@ def code_to_text(request):
         except:
             print('no code text detected')
             code_text = text_detection(img_path)
-        print(code_text)
+
 
         # gen = {}
         # for idx, code in enumerate(code_text):
@@ -238,8 +209,14 @@ def code_to_text(request):
 @csrf_exempt
 def summary(request):  ## 요약문 생성 버튼을 위한 메소드
     if request.method == 'POST':
+        temp = """Hi everyone. Today, we will talk about functions and how we can use them to change the text color of your terminal. So we will begin with an overview of functions and we will finish with this quick and fun project to function in their most basic definition of instructions. We use them to perform a specific tasks, for example, and eat cookies, function will include instructions to open mouth insert a cool Chi chew it multiple times and then lastly swallow it. And while each of these actions is a task, when we still bundle them under the umbrella of eat cookies. Now, let's see some fight and examples. First. We Define a function with a deaf Chi Ward. Next. We choose a name for this function in our case multiply with in a data set of round brackets, followed by a Colin and we enter the body of the function. Know the body is always in And it either with a tough character or with a bunch of spaces and the variables, A and B, which we have created, here are only available inside the function. If we'll try to access them from anywhere else. We will get an error. That's why we call them local variables. They are local to our function but are strangers everywhere else lost wave functions. Also have an outcome. In the case of our cookies function. The outcome is getting energized, becoming less hungry or maybe just appreciating The Taste. In the case of our multiple. I function. The outcome or output is a * B and we passed it into something called a return statement. A return statement represents the end of the function. This means that any line of code, we include below. It will not be under the umbrella of multiple. I now a valid return. Statement always includes some kind of data. This could be an integer, a Boolean, a string, a list or any other data type affect, even if we return non, which is the absence of data or an empty void, that still counts, the only case where we can skip the return statement is when we print something, but even our function, still Returns the data of none. We just didn't officially type it, but simply defining a function is not enough. We also need to call it and just like with Youmans, we call a function by its neck X, but I like humans. We also add a set of round brackets to the end of the Skoal know, a function that multiplies the exact same values time. After time is not very useful. What if we want to change the values of a and the values of beat every time. The function sample used something called parameters. Instead of variables, in the following example. We have placed A and B inside the round Rockets. So there are no longer variables. But rather parameters, no parameters are used as placeholders. We get to decide which values they represent. Only when it's time to call the function, not when we Define it. So, let's say we want to move to fly to buy for. In this case, a is a placeholder for 2 +. B is a placeholder for, for know, these numeric values. We see, inside our function, call are actually known as arguments. We use them to assign values to our coronavirus. So parameters, been are basically placeholders for arguments and if we select different Arguments, for example, 8 and 2. We are only Chi Walking the output of the function without changing the function itself. So, it's quickly practice everything. We have learned with a few coating exercises. So, we will Define a new function called about me and this function will take in three different parameters. The first one is named, the second is profession. And the last one would be tapped. Now, inside the body of the function. I would like to print. Hi. My name is to which we will concatenate our very first barometer name then similarly in the next line of code will print. I am a profession and then lastly and I have a pet. We will then leave the body of the function and we can then call it on our own personal information that we want to taste. That would be about me. My name is Maria. My profession is program. ER, and my pet is a cat. We will save this file and we will run it. And once we look in the term, we can see that all our parameters were replaced by their corresponding arguments and in a similar way, we can also call the about me function on CD.  Wizard.  Who has a mighty eagle?  We will save this file. We will rerun it. We will take a look in the terminal where we see the same function returns to different output depending on the arguments cool. But now let's do something a bit more useful. Let's randomly change. The text color of our print statements to do this. We will first import the ram the module and then additionally from sty, which is a console text styling model. We will import f g whereas G stands for foreground or text color and then go ahead and Define our function. We will call it generate RGB.  No RGB use a color mode where we mix between red green and blue. Each of these primary colors has its own intensity and it can be any value in between 0 and 2:55. If you guys want to find out more about it. I have a bunch of tutorials on its already. You can check them out. Now inside the body of the function. We will begin with the intensity of red. Since we are planning to work with random values. We will access the random module. And since this value is going to be an integer. We will fetch the rent in to Method. As in random integer, we will restrict integer to values between 0 and 256 week. And then we feed this across the rest of our color channel. So will copy this line of code. We will taste it below. We will replace red with green and we will do the same thing for our blue Channel.  And then lastly, as a return statement, we will return red green and blue in a tuple. And then ride below. We will exit the body of the function so we can finally call it. So generate RGB, which we will assign to the exact same to Apple. We are returning will just copy these values and we will place them in front of our function code. If we'd like to have a quick look, we can print red, green and blue and then each time. We, we run this code. We are generating brand new values for each of our color channels, but that's not all. We will define an additional function, cold generate color.  And this time we will pass some parameters to it. And as you may guess these parameters would be red, green, and blue and then we will get it to return. A foreground color ft. Based on the same parameters. We have just collected. We can then scroll all the way down and we will call this function right before our print statement. So generous color where we pass red green and blue. Again, we can assign this function call to color.  Interval data model fight our print statement. So instead of printing or color we will simply generated by specifying color and weekend then concatenate. Some kind of a string. Let's say, randomly changing colors, hahaha.  As an evil laugh, we will then save this file, and we will rerun it. And then, once we look at the terminal, it looks so much prettier. If we keep rerouting this code, Google keep generating all kinds of different colors, without really doing much. So once again, we haven't really changed anything inside the function, and this time, we're not even passing different arguments to it. And yet, our function returns a different output, each time we call it, which is awesome. So,  Good job, everyone. And even, if you guys didn't feel like holding along with me, you can always copy my code from the link in the description. Perfect. So, we've seen that the primary goal of functions is to organize our code and to split it in two tasks. But functions are also useful for avoiding repetition. So if we are planning to repeat a block of code, we will simply place it inside a function and reduce it to a single command which will a horse. Save us a lot of typing now. Thank you guys so much for watching. If you found the tutorial, please leave it at like maybe leave me a comment, subscribe to my channel, turn on the notification bill or share it with everybody, you know, code taste again, and I will see you very soon. """
+
         # 요약문 생성
-        sum_text = summary_text(text_alls[-1], models_sum[-1], tokens_sum[-1])
+        sum_text_l = summary_text(temp, models_sum[-1], tokens_sum[-1])
+
+        sum_text = ""
+        for i in range(len(sum_text_l)):
+            sum_text += '<div class = "box"> <h4>{}</h4> {}<br> </div>'.format((i+1),sum_text_l[i])
         sum_texts.append(sum_text)
         print(sum_text)
 
