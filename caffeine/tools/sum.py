@@ -29,8 +29,9 @@ def process_text(pre_summary):
     if 'we propose' in summary or 'we present' in summary:
         summary = summary.replace('we propose', 'this lecture is about')
         summary = summary.replace('we present', 'this lecture is about')
-    if 'in this paper' in summary:
+    if 'in this paper' in summary or 'in this article' in summary:
         summary = summary.replace('in this paper', 'in this lecture')
+        summary = summary.replace('in this article', 'in this lecture')
 
     ## 공백 처리(마침표/쉼표 앞뒤 공백), 대문자 변경(문장 첫문자 소문자)
     # 마침표 기준으로 문장 나눠주기
@@ -102,6 +103,6 @@ def sum_model_load():
     print("모델 로드 시작")
     path = os.getcwd()
 
-    model = BartForConditionalGeneration.from_pretrained(os.path.join(path, "bart_model/finetuning_cnn_pubmed_arxiv"),use_auth_token=True)
-    tokenizer = BartTokenizer.from_pretrained(os.path.join(path, "bart_model/tokenizer"),use_auth_token=True)
+    model = BartForConditionalGeneration.from_pretrained(os.path.join(path, "../bart_model/finetuning_cnn_pubmed_arxiv"),use_auth_token=True)
+    tokenizer = BartTokenizer.from_pretrained(os.path.join(path, "../bart_model/tokenizer"),use_auth_token=True)
     return model, tokenizer
