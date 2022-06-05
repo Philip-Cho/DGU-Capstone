@@ -24,7 +24,7 @@ def tokenize_split(text, tokenizer):
 
 
 def process_text(pre_summary):
-    summary = pre_summary  # .replace('\n', ' ')
+    summary = pre_summary
 
     if 'we propose' in summary or 'we present' in summary:
         summary = summary.replace('we propose', 'this lecture is about')
@@ -40,17 +40,17 @@ def process_text(pre_summary):
     pro_summary = ''
     for sent in summary_split:
         sent = sent.strip()
-        if len(sent)<=1 or sent.count('#')>1 or '* keyword' in sent:
+        if len(sent) <= 1 or sent.count('#') > 1 or '* keyword' in sent:
             continue
         if sent[0].islower():
             sent = sent[0].upper() + sent[1:]
         if sent[0] == '*':
             sent = sent[2:]
-        sent += '. '    # punctuation
+        sent += '. '  # punctuation
         while '  ' in sent:
             sent = sent.replace('  ', ' ')
         sent = sent.replace(' ,', ',')
-        sent - sent.replace(',.', '.')
+        sent = sent.replace(',.', '.')
 
         pro_summary += sent
 
@@ -73,13 +73,13 @@ def summary_text(text, model, tokenizer, max_length=100):
 
     for i in range(n_seg):
         print(n_seg - i, end=' >> ')
-        summary_ids = model.generate(input_ids=inputs["input_ids"][i].reshape(1, -1),
-                                     attention_mask=inputs['attention_mask'][i].reshape(1, -1),
-                                     max_length=max_length
-                                     )
+        summary_ids = model.generate(input_ids = inputs["input_ids"][i].reshape(1, -1),
+                                     attention_mask = inputs['attention_mask'][i].reshape(1, -1),
+                                     max_length = max_length
+                                    )
         summary_seg = tokenizer.batch_decode(summary_ids,
-                                             skip_special_tokens=True,
-                                             clean_up_tokenization_spaces=False)[0]
+                                         skip_special_tokens = True,
+                                         clean_up_tokenization_spaces = False)[0]
 
         if i % 5 == 0 and i != 0:  ##
             summary_list.append(summary_part)
