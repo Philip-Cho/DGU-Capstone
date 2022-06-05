@@ -3,7 +3,7 @@ import os, re
 import torch
 
 def tokenize_split(text, tokenizer):
-    split_size = 800   # 클수록 global, 작을수록 local information 더 담을 수 있음
+    split_size = 1000
     tokens = tokenizer([text], return_tensors='pt', add_special_tokens=False)
     input_ids_chunks = list(tokens['input_ids'][0].split(split_size))
     attention_mask_chunks = list(tokens['attention_mask'][0].split(split_size))
@@ -24,27 +24,34 @@ def tokenize_split(text, tokenizer):
 
 
 def process_text(pre_summary):
-    summary = pre_summary.replace('\n', ' ')
+    summary = pre_summary  # .replace('\n', ' ')
+
     if 'we propose' in summary or 'we present' in summary:
         summary = summary.replace('we propose', 'this lecture is about')
         summary = summary.replace('we present', 'this lecture is about')
     if 'in this paper' in summary:
-        summary = summary.replace('in this paper', 'in this course')
+        summary = summary.replace('in this paper', 'in this lecture')
 
     ## 공백 처리(마침표/쉼표 앞뒤 공백), 대문자 변경(문장 첫문자 소문자)
     # 마침표 기준으로 문장 나눠주기
     summary_split = summary.split('.')
+    if summary[-1] != '.':
+        summary_split = summary_split[:-1]
     pro_summary = ''
     for sent in summary_split:
         sent = sent.strip()
-        if len(sent) <= 1:
+        if len(sent)<=1 or sent.count('#')>1 or '* keyword' in sent:
             continue
         if sent[0].islower():
             sent = sent[0].upper() + sent[1:]
-        sent += '. '
+        if sent[0] == '*':
+            sent = sent[2:]
+        sent += '. '    # punctuation
         while '  ' in sent:
             sent = sent.replace('  ', ' ')
         sent = sent.replace(' ,', ',')
+        sent = sent.replace(',.', '.')
+
         pro_summary += sent
 
     return pro_summary
