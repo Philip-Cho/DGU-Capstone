@@ -127,8 +127,9 @@ def text(request):  # STT 버튼 호출시 실행
         # 동영상 스토리지 업로드
         upload_blob_from_memory("dgu_dsc_stt", file_path, contents[-1])
 
-        #시간 측정
+        # 시간 측정
         start_time = time.time()
+
         # 동영상 STT
         gcs_url = "gs://dgu_dsc_stt/"  # 스토리지 path
         gcs_file = gcs_url + contents[-1]  # 스토리지 내 동영상 path
@@ -141,7 +142,7 @@ def text(request):  # STT 버튼 호출시 실행
         # 텍스트 할당
         text_alls.append(text_all)
         print(text_all)
-        print("!!STT 소요시간!! : ",round((end_time - start_time), 4))
+        print("!!STT 소요시간!! : ", round((end_time - start_time), 4))
 
         # 웹으로 보낼 데이터
         gen = {
@@ -160,12 +161,13 @@ def get_code_imgs(path):
 
 
 @csrf_exempt
-def code_to_text(request):
+def code_to_text(request):  # 이미지를 통해 코드 추출
     if request.method == 'POST':
 
+        # 이미지 임시 이름
         count = 1
 
-        # 이미지 저장
+        # 좌표 찍고 이미지 저장
         x_left = float(88)
         y_up = float(295)
         x_right = float(1214)
@@ -174,7 +176,7 @@ def code_to_text(request):
 
         # 이미지 경로 탐색
         path = os.getcwd()
-        #폴더 경로 탐색
+        # 폴더 경로 탐색
         folder_codes = "img"
         folder_path = os.path.join(path, folder_codes)
         # 폴더에 있는 이미지 경로 탐색
@@ -192,10 +194,7 @@ def code_to_text(request):
             print('no code text detected')
             code_text = text_detection(img_path)
 
-
-        # gen = {}
-        # for idx, code in enumerate(code_text):
-        #     gen[idx] = code
+        # 웹 전송 데이터
         gen = {}
         code_str = ''
         for sentence in code_text:
@@ -209,12 +208,14 @@ def code_to_text(request):
 @csrf_exempt
 def summary(request):  ## 요약문 생성 버튼을 위한 메소드
     if request.method == 'POST':
+
         # 요약문 생성
         sum_text_l = summary_text(text_alls[-1], models_sum[-1], tokens_sum[-1])
 
+        # 요약문 생성
         sum_text = ""
         for i in range(len(sum_text_l)):
-            sum_text += '<div class = "box"> <h4>{}</h4> {}<br> </div>'.format((i+1),sum_text_l[i])
+            sum_text += '<div class = "box"> <h4>{}</h4> {}<br> </div>'.format((i + 1), sum_text_l[i])
         sum_texts.append(sum_text)
         print(sum_text)
 
@@ -275,11 +276,10 @@ def keytext(request):  # 키워드 추출을 위한 메소드
 @csrf_exempt
 def savedb(request):  # DB 저장을 위한 메소드
     if request.method == 'POST':
-        print(request.text)
-        if request.user.is_authenticated:
+        if request.user.is_authenticated:  # 유저 로그인 확인
             print(request.user)
             ## history 내에 데이터 있는지 확인 후 없으면 생성
-            try: # DB 존재하지 않을 시
+            try:  # DB 존재하지 않을 시
                 history, cre = LectureHistory.objects.get_or_create(id=str(request.user) + '_' + str(movie_titles[-1]),
                                                                     user_id=request.user, created_at=timezone.now())
                 history.lecture_name = movie_titles[-1]
@@ -297,7 +297,7 @@ def savedb(request):  # DB 저장을 위한 메소드
                     history.lecture_sum = " "
                     history.keyword = " "
                     history.save()
-            except: #DB 존재시
+            except:  # DB 존재시
                 history = LectureHistory.objects.get(id=str(request.user) + '_' + str(movie_titles[-1]))
 
                 history.lecture_name = movie_titles[-1]
@@ -319,6 +319,7 @@ def savedb(request):  # DB 저장을 위한 메소드
         else:
             return HttpResponse("!!로그인 필요!!")
 
+
 @csrf_exempt
 def recommandsave(request):  # DB 저장을 위한 메소드
     if request.method == 'POST':
@@ -328,9 +329,10 @@ def recommandsave(request):  # DB 저장을 위한 메소드
             history_lecture = LectureHistory.objects.get(lecture_name=str(lecture_name_t).strip())
 
             ## history 내에 데이터 있는지 확인 후 없으면 생성
-            try: # DB 존재하지 않을 시
-                history, cre = LectureHistory.objects.get_or_create(id=str(request.user) + '_' + str(history_lecture.lecture_name),
-                                                                    user_id=request.user, created_at=timezone.now())
+            try:  # DB 존재하지 않을 시
+                history, cre = LectureHistory.objects.get_or_create(
+                    id=str(request.user) + '_' + str(history_lecture.lecture_name),
+                    user_id=request.user, created_at=timezone.now())
                 history.lecture_name = history_lecture.lecture_name
                 history.embed_url = history_lecture.embed_url
                 history.lecture_url = history_lecture.lecture_url
@@ -346,7 +348,7 @@ def recommandsave(request):  # DB 저장을 위한 메소드
                     history.lecture_sum = " "
                     history.keyword = " "
                     history.save()
-            except: #DB 존재시
+            except:  # DB 존재시
                 history = LectureHistory.objects.get(id=str(request.user) + '_' + str(history_lecture.lecture_name))
 
                 history.lecture_name = history_lecture.lecture_name
@@ -400,6 +402,7 @@ def index_result(request, lecture_name):  # 게시판 결과물을 위한 메소
 
     return render(request, 'index_result.html', context)
 
+
 # 회원가입
 def register(request):
     if request.method == "POST":
@@ -432,6 +435,15 @@ def login_view(request):
             if user is not None:
                 msg = 'login success!'
                 login(request, user)
+                ########################################
+                ## summary 모델 로드
+                model_sum, token_sum = sum_model_load()
+                models_sum.append(model_sum)
+                tokens_sum.append(token_sum)
+
+                ## keybert 모델 로드
+                models_key.append(load_key_model())
+                ########################################
         return render(request, 'login.html', {'form': form, 'msg': msg})
     else:
         form = AuthenticationForm()
@@ -442,13 +454,3 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('index')
-
-# @csrf_exempt
-# def test(request):
-#     if request.method == 'POST':
-#         # 키버트 활용
-#         text_re = request.POST['text']
-#         key_dict = key_question(text_re, models_key[-1])
-#
-#         plot = plot_keywords(key_dict)
-#     return HttpResponse(plot)
