@@ -1,9 +1,7 @@
 from transformers import BartTokenizer, BartForConditionalGeneration
 import os, re
 import torch
-from django.views.decorators.csrf import csrf_exempt
 
-@csrf_exempt
 def tokenize_split(text, tokenizer):
     split_size = 1000
     tokens = tokenizer([text], return_tensors='pt', add_special_tokens=False)
@@ -24,15 +22,16 @@ def tokenize_split(text, tokenizer):
 
     return {'input_ids': input_ids, 'attention_mask': att_masks}
 
-@csrf_exempt
+
 def process_text(pre_summary):
     summary = pre_summary
 
     if 'we propose' in summary or 'we present' in summary:
         summary = summary.replace('we propose', 'this lecture is about')
         summary = summary.replace('we present', 'this lecture is about')
-    if 'in this paper' in summary:
+    if 'in this paper' in summary or 'in this article' in summary:
         summary = summary.replace('in this paper', 'in this lecture')
+        summary = summary.replace('in this article', 'in this lecture')
 
     ## 공백 처리(마침표/쉼표 앞뒤 공백), 대문자 변경(문장 첫문자 소문자)
     # 마침표 기준으로 문장 나눠주기
@@ -58,7 +57,7 @@ def process_text(pre_summary):
 
     return pro_summary
 
-@csrf_exempt
+
 def summary_text(text, model, tokenizer, max_length=100):
     print("요약 시작=D")
     text = text.replace('\n', ' ')
@@ -99,13 +98,11 @@ def summary_text(text, model, tokenizer, max_length=100):
 
     return summary_list
 
-@csrf_exempt
+
 def sum_model_load():
     print("모델 로드 시작")
     path = os.getcwd()
 
-    model = BartForConditionalGeneration.from_pretrained(os.path.join(path, "bart_model/finetuning_cnn_pubmed_arxiv"),use_auth_token=False)
-    tokenizer = BartTokenizer.from_pretrained(os.path.join(path, "bart_model/finetuning_cnn_pubmed_arxiv"),use_auth_token=False)
-    # model = BartForConditionalGeneration.from_pretrained("facebook/bart-large-cnn")
-    # tokenizer = BartTokenizer.from_pretrained("facebook/bart-large-cnn")
+    model = BartForConditionalGeneration.from_pretrained(os.path.join(path, "bart_model/finetuning_cnn_pubmed_arxiv"))
+    tokenizer = BartTokenizer.from_pretrained(os.path.join(path, "bart_model/finetuning_cnn_pubmed_arxiv"))
     return model, tokenizer
