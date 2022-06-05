@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="ko">
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.88.1">
+    <title>카페인 수혈 강의 히스토리 페이지</title>
+    <!--    아이콘을 위한 링크 -->
+    <link href="{% static 'css/main.css' %}" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/acbb32aeb8.js" crossorigin="anonymous"></script>
+    <!--    한글 폰트-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+
+</head>
+<body class="is-preload">
+<!-- Wrapper -->
+<div id="wrapper">
+    <!-- Main -->
+    <div id="main">
+        <div class="inner">
+            <!-- Header -->
+            <header id="header">
+                <a href="http://127.0.0.1:8000/caffeine/" class="logo"><strong>Lecture summarize Page</strong> by
+                    Caffeine Intoxication</a>
+                <ul class="icons">
+                    <li class="nav-item">
+                        {% if user.is_authenticated %}
+                            <a class="nav-link" href="{% url 'logout' %}">{{ user.username }} (로그아웃)</a>
+                        {% else %}
+                            <a class="nav-link" href="{% url 'login' %}">로그인</a>
+                        {% endif %}
+                    </li>
+                    <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+                    <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+                    <li><a href="#" class="icon brands fa-snapchat-ghost"><span class="label">Snapchat</span></a></li>
+                    <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+                </ul>
+            </header>
+            <!--                content -->
+            <section>
+<!--            좌우 품을 행 시작-->
+                <div class="row">
+<!--            좌측 div 시작-->
+                    <div class = "col-6 col-12-small" style="width: 70%;">
+                        <span id="video">
+                            <h3> Lecture Name : <span style="color:#ff3e33">{{ history_lecture.lecture_name }} </span> </h3>
+                            <iframe width="100%" height="500" src={{ history_lecture.embed_url }} title = "YouTube video player"
+                                    frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen></iframe>
+                        </span> <!--video span end-->
+                    </div> <!--좌측 div col end-->
+<!--                우측 div 시작    -->
+                    <div class = "col-6 col-12-small" style="width: 30%; height : 600px; overflow:auto;">
+                        <button id="img_to_text" class="button small" onclick="code_to_text()" type="button">캡쳐&변환</button>
+                            <pre>
+                            <code id="code" style = "height: 500px;"><!-- text변환한거 띄울 div-->
+                            </code> <!--code_box end-->
+                            </pre>
+                        </div> <!-- 오른쪽 div end-->
+                </div> <!--row div end-->
+                <script>
+                        function code_to_text() {
+                            $.ajax({
+                                url: 'http://127.0.0.1:8000/caffeine/code_to_text/',
+                                method: 'POST',
+                                }).then(function (response) {
+                                    $('#code').prepend(response[0]);
+                                    $('#code').prepend("=======================================================");
+                                });
+                        } //codetotext()끝
+                </script>
+
+                <div class="box">
+                    <div class="box">
+                        <div class="h-100 p-5 text-white bg-dark rounded-3">
+                            <h2>강의 전문</h2>
+
+                            <div id="textall" style="height : 768px ; margin-left: 0px; overflow:auto;">
+                                {{ history_lecture.lecture_note }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box">
+                        <div class="h-100 p-5 text-white bg-dark rounded-3">
+                            <h2>강의 요약</h2>
+                            <div id="sumall" style="margin-left: 0px;">
+                                {{ history_lecture.lecture_sum }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="box">
+                    <div id="plot_box" class="box">
+                        <div class="h-100 p-5 text-white bg-dark rounded-3">
+                            <h2>키워드 추출</h2>
+                            <div id="loading3" style="margin-left: 0px; display: none;">
+                                <h4>키워드 추출중...</h4>
+                            </div>
+<!--{#                            <div id="keyword" style="margin-left: 0px; display: none;">#}-->
+<!--{#                            </div>#}-->
+<!--{#                            <div id="plot_box" class="box" style="width: 80%;">#}-->
+                                {# 동글이 자리#}
+<!--{#                            </div>#}-->
+                            <button id="button3" class="button" onclick="keytext()" type="button">3.
+                                키워드 추출
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <div class="h-100 p-5 text-white bg-dark rounded-3">
+                            <h2>빈칸 문제</h2>
+                            <div class="box" id="loading4" style="margin-left: 0px; display: none;">
+                                <h4>문제 생성중...</h4>
+                            </div>
+                            <div class="box" id="exercise" style="margin-left: 0px; display: none;">
+                            </div>
+                            <button id="button4" class="btn btn-outline-secondary" onclick="showanswer()"
+                                    type="button" style="display: none;">4. 정답확인
+                            </button>
+                            <div class="box" id="answer" style="margin-left: 0px; display: none;"></div>
+                        </div>
+                    </div>
+                    <button id="button_save" class="button" onclick="savedb()" type="button">4.강의 담기</button>
+                </div>
+                <!--            section content end-->
+            </section>
+            <!-- inner end -->
+        </div>
+        <!--main end-->
+    </div>
+    <!--        side bar start-->
+    <div id="sidebar">
+        <div class="inner">
+
+            <!-- Search -->
+            <section id="search" class="alt">
+                <form method="post" action="#">
+                    <input type="text" name="query" id="query" placeholder="Search"/>
+                </form>
+            </section>
+
+            <!-- Menu -->
+            <nav id="menu">
+                <header class="major">
+                    <h2>Menu</h2>
+                </header>
+                <ul>
+                    <li><a href="http://127.0.0.1:8000/caffeine/">NEW SUMMARIZE</a></li>
+                    <li><a href="http://127.0.0.1:8000/caffeine/board/">HISTORY</a></li>
+{#                    <li><a href="#">??</a></li>#}
+
+                </ul>
+            </nav>
+
+            <!-- Section -->
+            <section>
+                <header class="major">
+                    <h2>Get in touch</h2>
+                </header>
+                <p>영어로 강의 문제 없어요!!!</p>
+                <ul class="contact">
+                    <li class="icon solid fa-envelope"><a href="#">information@caffeine.ac.kr</a></li>
+                    <li class="icon solid fa-phone">(010) 1234-5678</li>
+                    <li class="icon solid fa-home">30, Pildong-ro 1-gil, Jung-gu, Seoul, Republic of Korea<br/>
+                        02-2260-0000
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Footer -->
+            <footer id="footer">
+                <p class="copyright">&copy; Caffeine. All rights reserved.</p>
+            </footer>
+            <!--inner end-->
+        </div>
+        <!--    sidebar end-->
+    </div>
+    <!--wrapper end-->
+</div>
+
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    function keytext() {
+        $('#loading3').show();
+        $('#loading4').show();
+        $.ajax({
+            url: 'http://127.0.0.1:8000/caffeine/keytext/',
+            method: 'POST',
+            data: {'text': $('#textall').html()}
+        }).then(function (response) {
+            $('#loading3').hide();
+            $('#loading4').hide();
+            $('#keyword').show();
+            $('#keyword').html(response.keyword);
+            $('#plot_box').html(response.plot_html);
+            $('#exercise').html("<p>Q1. <br>" + response.sentence_blank1 + "</p>");
+            $('#exercise').append("<p>Q2. <br>" + response.sentence_blank2 + "</p>");
+            $('#exercise').append("<p>Q3. <br>" + response.sentence_blank3 + "</p>");
+            $('#exercise').append("<p>Q4. <br>" + response.sentence_blank4 + "</p>");
+            $('#exercise').append("<p>Q5. <br>" + response.sentence_blank5 + "</p>");
+            $('#exercise').show();
+            $('#answer').html("<p>A1.&nbsp" + response.answer1 + "<br>" + response.sentence1 + "</p>");
+            $('#answer').append("<p>A2.&nbsp" + response.answer2 + "<br>" + response.sentence2 + "</p>");
+            $('#answer').append("<p>A3.&nbsp" + response.answer3 + "<br>" + response.sentence3 + "</p>");
+            $('#answer').append("<p>A4.&nbsp" + response.answer4 + "<br>" + response.sentence4 + "</p>");
+            $('#answer').append("<p>A5.&nbsp" + response.answer5 + "<br>" + response.sentence5 + "</p>");
+            $('#button3').hide();
+            $('#button4').show();
+        });
+    }
+</script>
+
+<script>
+    function savedb() {
+        $.ajax({
+            url: 'http://127.0.0.1:8000/caffeine/recommandsave/',
+            method: 'POST',
+            data: {'text': $('#textall').html() }
+        }).then(function (response) {
+            $('#button_save').hide();
+            alert(response)
+        });
+    }
+</script>
+
+<script>
+    function showanswer() {
+        $('#answer').show();
+        $('#button4').hide();
+    }
+</script>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/browser.min.js' %}"></script>
+<script src="{% static 'js/breakpoints.min.js' %}"></script>
+<script src="{% static 'js/util.js' %}"></script>
+<script src="{% static 'js/main.js' %}"></script>
+
+</html>

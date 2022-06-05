@@ -277,12 +277,61 @@ def keytext(request):  # 키워드 추출을 위한 메소드
 @csrf_exempt
 def savedb(request):  # DB 저장을 위한 메소드
     if request.method == 'POST':
+        print(request.text)
         if request.user.is_authenticated:
             print(request.user)
             ## history 내에 데이터 있는지 확인 후 없으면 생성
             try: # DB 존재하지 않을 시
                 history, cre = LectureHistory.objects.get_or_create(id=str(request.user) + '_' + str(movie_titles[-1]),
                                                                     user_id=request.user, created_at=timezone.now())
+                history.lecture_name = movie_titles[-1]
+                history.embed_url = embed_urls[-1]
+                history.lecture_url = movie_urls[-1]
+                history.id_url = movie_ids[-1]
+                history.update_at = timezone.now()
+                try:
+                    history.lecture_note = text_alls[-1]
+                    history.lecture_sum = sum_texts[-1]
+                    history.keyword = hash_tags[-1]
+                    history.save()
+                except:
+                    history.lecture_note = " "
+                    history.lecture_sum = " "
+                    history.keyword = " "
+                    history.save()
+            except: #DB 존재시
+                history = LectureHistory.objects.get(id=str(request.user) + '_' + str(movie_titles[-1]))
+
+                history.lecture_name = movie_titles[-1]
+                history.embed_url = embed_urls[-1]
+                history.lecture_url = movie_urls[-1]
+                history.id_url = movie_ids[-1]
+                history.update_at = timezone.now()
+                try:
+                    history.lecture_note = text_alls[-1]
+                    history.lecture_sum = sum_texts[-1]
+                    history.keyword = hash_tags[-1]
+                    history.save()
+                except:
+                    history.lecture_note = " "
+                    history.lecture_sum = " "
+                    history.keyword = " "
+                    history.save()
+            return HttpResponse("!!DB 저장 완료!!")
+        else:
+            return HttpResponse("!!로그인 필요!!")
+
+@csrf_exempt
+def recommandsave(request):  # DB 저장을 위한 메소드
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            print(request.user)
+            lecture_note_t = request.POST['text']
+            history_lecture = LectureHistory.objects.filter(lecture_name=lecture_name).order_by('-update_at')[0]
+            ## history 내에 데이터 있는지 확인 후 없으면 생성
+            try: # DB 존재하지 않을 시
+                history, cre = LectureHistory.objects.get_or_create(id=str(request.user) + '_' + str(movie_titles[-1]),
+                                                                    user_id=request.user, lecture_note=lecture_note_t)
                 history.lecture_name = movie_titles[-1]
                 history.embed_url = embed_urls[-1]
                 history.lecture_url = movie_urls[-1]
@@ -341,6 +390,16 @@ def history_result(request, id):  # 게시판 결과물을 위한 메소드
 
     return render(request, 'history_result.html', context)
 
+
+@csrf_exempt
+def index_result(request, lecture_name):  # 게시판 결과물을 위한 메소드
+
+    # id를 pk로 가지고 오기
+    history_lecture = LectureHistory.objects.filter(lecture_name=lecture_name).order_by('-update_at')
+
+    context = {'history_lecture': history_lecture[0]}
+
+    return render(request, 'index_result.html', context)
 
 # 회원가입
 def register(request):
