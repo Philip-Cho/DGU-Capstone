@@ -50,33 +50,52 @@ def process_text(pre_summary):
         while '  ' in sent:
             sent = sent.replace('  ', ' ')
         sent = sent.replace(' ,', ',')
-        sent = sent.replace(',.', '.')
+        sent - sent.replace(',.', '.')
 
         pro_summary += sent
 
     return pro_summary
 
 
-def summary_text(text, model, tokenizer, max_length=None):
-    print("요약 시작")
+def summary_text(text, model, tokenizer, max_length=100):
+    print("요약 시작=D")
     text = text.replace('\n', ' ')
     inputs = tokenize_split(text, tokenizer)
+
     n_seg = inputs['input_ids'].shape[0]  # max_length로 split된 개수
+    summary_list = []
+    summary_part = ''
     summary = ''
+
+    #     if n_seg > 4:  ##
+    #         summary += '[Part 1]\n'  ##
+    #         n = 2  ##
+
     for i in range(n_seg):
         print(n_seg - i, end=' >> ')
         summary_ids = model.generate(input_ids=inputs["input_ids"][i].reshape(1, -1),
                                      attention_mask=inputs['attention_mask'][i].reshape(1, -1),
-                                     max_length=max_length)
+                                     max_length=max_length
+                                     )
         summary_seg = tokenizer.batch_decode(summary_ids,
                                              skip_special_tokens=True,
                                              clean_up_tokenization_spaces=False)[0]
 
-        summary += summary_seg
-    print(0)
-    summary_end = process_text(summary)
+        if i % 5 == 0 and i != 0:  ##
+            summary_list.append(summary_part)
+            summary_part = ''
 
-    return summary_end
+        summary_seg = summary_seg.replace('\n', '')
+        summary_seg = process_text(summary_seg)
+
+        summary_part += summary_seg  # 각 part summary(string)
+        summary += summary_seg  # 전체 summary(string)
+
+    summary_list.append(summary_part)  #
+    print(0)
+    #    summary_end = process_text(summary)
+
+    return summary_list
 
 
 def sum_model_load():
