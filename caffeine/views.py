@@ -261,7 +261,7 @@ def keytext(request):  # 키워드 추출을 위한 메소드
 
         # 동글이 출력
         plot = plot_keywords(key_dict)
-        plot_html = '<img style="width=100%;" src="data:image/png;base64, {}">'.format(plot)
+        plot_html = '<img style="width=100%;" src="data:image/png;base64, {}"/>'.format(plot)
 
         # 키워드 추출
         keywords = ''
