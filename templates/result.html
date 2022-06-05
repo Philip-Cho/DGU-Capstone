@@ -131,7 +131,7 @@
                                 url: 'http://127.0.0.1:8000/caffeine/code_to_text/',
                                 method: 'POST',
                                 }).then(function (response) {
-                                    $('#code').html(response[0]);
+                                    $('#code').prepend(response[0]);
 
                                 });
                         } //codetotext()끝
