@@ -326,7 +326,7 @@ def recommandsave(request):  # DB 저장을 위한 메소드
         if request.user.is_authenticated:
             print(request.user)
             lecture_name_t = request.POST["text"]
-            history_lecture = LectureHistory.objects.get(lecture_name=str(lecture_name_t).strip())
+            history_lecture = LectureHistory.objects.filter(lecture_name=str(lecture_name_t).strip())[0]
 
             ## history 내에 데이터 있는지 확인 후 없으면 생성
             try:  # DB 존재하지 않을 시
@@ -454,3 +454,15 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('index')
+
+@csrf_exempt
+def searchlec(request):
+    if request.method == 'POST':
+        lec_key = request.POST['query']
+
+        # lecture_name에 따라 필터링
+        video_search = LectureHistory.objects.filter(lecture_name__contains=lec_key)
+        # 검색된 강의들의 강의명과 링크를 반환
+        toweb = {"lec_key":lec_key, "video_search": video_search}
+
+    return render(request, 'search_board.html', toweb)

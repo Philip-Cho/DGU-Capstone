@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.88.1">
-    <title>카페인수혈 강의 히스토리</title>
+    <title>강의 새로 요약하기</title>
     <!--    아이콘을 위한 링크 -->
     <link href="{% static 'css/main.css' %}" rel="stylesheet">
     <script src="https://kit.fontawesome.com/acbb32aeb8.js" crossorigin="anonymous"></script>
@@ -28,7 +28,7 @@
         <div class="inner">
             <!-- Header -->
             <header id="header">
-                <a href="http://127.0.0.1:8000/caffeine/board/" class="logo"><strong>History Page</strong> by Caffeine
+                <a href="http://127.0.0.1:8000/caffeine/" class="logo"><strong>Search Page</strong> by Caffeine
                     Intoxication</a>
                 <ul class="icons">
                     <li class="nav-item">
@@ -38,7 +38,6 @@
                             <a class="nav-link" href="{% url 'login' %}">로그인</a>
                         {% endif %}
                     </li>
-
                     <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
                     <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
                     <li><a href="#" class="icon brands fa-snapchat-ghost"><span class="label">Snapchat</span></a></li>
@@ -46,44 +45,19 @@
                 </ul>
             </header>
             <!--                content -->
-            <section>
-                <!--				새로운 컨텐츠 넣을 때 이 곳에 요소들을 추가한다. 나머지는 틀-->
-                <!--게시판 Table -->
-                <table>
-                    <thead>
-                    <tr>
-                        <th>
-                            <h4><span style="color: #f56a6a; font-weight: bold;">{{ user.username }}</span> 님의 강의 목록
-                            </h4>
-                        </th>
-                    </tr>
-                    </thead>
-                    {% if lecture_list %}
-                        {% for lecture in lecture_list %}
-                            <tbody>
-                            <tr>
-                                <td colspan="2">
-                                    <!--                                    {#<img src="http://img.youtube.com/vi/{{lecture.id_url}}/mqdefault.jpg" alt="thumbnail">#}-->
-                                    <h4 style="margin: 0;"><a
-                                            href="http://127.0.0.1:8000/caffeine/board/{{ lecture.id }}/">{{ lecture.lecture_name }}</a>
-                                    </h4>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="text-align: left;">{{ lecture.keyword }}</td>
-                                <td style="text-align: right;">저장 일시: {{ lecture.created_at }}</td>
-                            </tr>
-                        {% endfor %}
-                    {% else %}
-                        <tr>
-                            <td colspan="2">강의가 없습니다.</td>
-                        </tr>
-                    {% endif %}
-                    </tbody>
-                </table>
-                <!--            section content end-->
-            </section>
-            <!-- inner end -->
+                <header style="margin-top: 3%">
+                    <h4><span style="color: #f56a6a; font-weight: bold;">{{lec_key}}</span>로 검색된 강의들</h4>
+                </header>
+                <div class="posts">
+                    {% for lec in video_search %}
+                    <article href="http://127.0.0.1:8000/caffeine/{{lec.lecture_name}}/">
+                        <a href="http://127.0.0.1:8000/caffeine/{{lec.lecture_name}}/" class="image"><img src="http://img.youtube.com/vi/{{lec.id_url}}/mqdefault.jpg" alt="thumbnail"></a>
+                        <h5><a href="http://127.0.0.1:8000/caffeine/{{lec.lecture_name}}/"> {{ lec.lecture_name }}</a></h5>
+                        <p> {{ lec.num_lecture }}명이 담은 강의</p>
+                    </article>
+                    {% endfor %}
+                </div>
+        <!-- inner end -->
         </div>
         <!--main end-->
     </div>
@@ -106,7 +80,7 @@
                 <ul>
                     <li><a href="http://127.0.0.1:8000/caffeine/">NEW SUMMARIZE</a></li>
                     <li><a href="http://127.0.0.1:8000/caffeine/board/">HISTORY</a></li>
-                    {#                    <li><a href="#">??</a></li>#}
+{#                    <li><a href="#">??</a></li>#}
 
                 </ul>
             </nav>
@@ -144,6 +118,7 @@
 <script src="{% static 'js/breakpoints.min.js' %}"></script>
 <script src="{% static 'js/util.js' %}"></script>
 <script src="{% static 'js/main.js' %}"></script>
+<!--    로그아웃 알림창 이벤트-->
 <script>
     function logout_function() {
         $.ajax({
@@ -154,6 +129,17 @@
             // location.replace("이동할 페이지");
         });
     }
-</script>
 
+    function recommend_lec() {
+        $.ajax({
+            url: 'http://127.0.0.1:8000/caffeine/result/',
+            method: 'POST',
+            data: {'address': $('#recommend_url').html()},
+
+            success: function (data) {
+                location.reload();
+            },
+        })
+    }
+</script>
 </html>
