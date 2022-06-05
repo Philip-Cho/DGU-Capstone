@@ -74,7 +74,7 @@
                 </div>
 
                 <div class="box">
-                    <div class="box">
+                    <div id="plot_box" class="box">
                         <div class="h-100 p-5 text-white bg-dark rounded-3">
                             <h2>키워드 추출</h2>
                             <div id="loading3" style="margin-left: 0px; display: none;">
@@ -82,9 +82,9 @@
                             </div>
 {#                            <div id="keyword" style="margin-left: 0px; display: none;">#}
 {#                            </div>#}
-                            <div id="plot_box" class="box">
+{#                            <div id="plot_box" class="box" style="width: 80%;">#}
                                 {# 동글이 자리#}
-                            </div>
+{#                            </div>#}
                             <button id="button3" class="button" onclick="keytext()" type="button">3.
                                 키워드 추출
                             </button>
@@ -179,7 +179,7 @@
             $('#loading4').hide();
             $('#keyword').show();
             $('#keyword').html(response.keyword);
-            $('#plot_box').html(response.plot_html);
+            $('#plot_box').append(response.plot_html);
             $('#exercise').html("<p>1번 문제: " + response.sentence_blank1 + "</p>");
             $('#exercise').append("<p>2번 문제: " + response.sentence_blank2 + "</p>");
             $('#exercise').append("<p>3번 문제: " + response.sentence_blank3 + "</p>");

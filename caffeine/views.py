@@ -192,10 +192,19 @@ def get_code_imgs(path):
 def code_to_text(request):
     if request.method == 'POST':
 
+        count = 1
+
+        # 이미지 저장
+        x_left = float(88)
+        y_up = float(295)
+        x_right = float(1214)
+        y_down = float(640)
+        pyautogui.screenshot('./img/{}.png'.format(count), region=(x_left, y_up, x_right, y_down))
+
         # 이미지 경로 탐색
         path = os.getcwd()
         #폴더 경로 탐색
-        folder_codes = "codes"
+        folder_codes = "img"
         folder_path = os.path.join(path, folder_codes)
         # 폴더에 있는 이미지 경로 탐색
         code_imgs = get_code_imgs(folder_path)
@@ -252,7 +261,7 @@ def keytext(request):  # 키워드 추출을 위한 메소드
 
         # 동글이 출력
         plot = plot_keywords(key_dict)
-        plot_html = '<img src="data:image/png;base64, {}">'.format(plot)
+        plot_html = '<img style="width=100%;" src="data:image/png;base64, {}">'.format(plot)
 
         # 키워드 추출
         keywords = ''

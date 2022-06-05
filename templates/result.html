@@ -116,7 +116,7 @@
                     </div>
 <!--                 비디오 오른쪽에 배치할 div-->
                 <div class = "col-6 col-12-small" style="width: 30%; height : 600px; overflow:auto;">
-                    <button id="capture_button" class="button small" onclick="getxy()" type="button">캡쳐</button>
+{#                    <button id="capture_button" class="button small" onclick="getxy()" type="button">캡쳐</button>#}
                     <button id="img_to_text" class="button small" onclick="code_to_text()" type="button">캡쳐&변환</button>
                     <pre>
                     <code id="code" style = "height: 500px;"><!-- text변환한거 띄울 div-->
@@ -132,7 +132,6 @@
                                 method: 'POST',
                                 }).then(function (response) {
                                     $('#code').prepend(response[0]);
-
                                 });
                         } //codetotext()끝
                 </script>
@@ -197,7 +196,7 @@
                 </div>
 
                 <div class="box">
-                    <div class="box">
+                    <div id="plot_box" class="box">
                         <div class="h-100 p-5 text-white bg-dark rounded-3">
                             <h2>키워드 추출</h2>
                             <div id="loading3" style="margin-left: 0px; display: none;">
@@ -205,9 +204,9 @@
                             </div>
 {#                            <div id="keyword" style="margin-left: 0px; display: none;">#}
 {#                            </div>#}
-                            <div id="plot_box" class="box">
+{#                            <div id="plot_box" class="box" style="width: 80%;">#}
                                 {# 동글이 자리#}
-                            </div>
+{#                            </div>#}
                             <button id="button3" class="button" onclick="keytext()" type="button">
                                 3.키워드 추출
                             </button>
