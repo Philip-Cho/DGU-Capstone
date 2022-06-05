@@ -119,15 +119,15 @@ def keysents_blank_rd(keywords: list, keysents: list):
 
     random.shuffle(qas)  # random!
 
-    qas_n = {}
+    qas_5 = {}
     n=len(qas) if len(qas)<5 else 5   # 생성된 문제가 5개 이하일 때
-    for i in range(n):
-        qas_n['sentence_blank{}'.format(i + 1)] = qas[i]['sentence_blank']
-        qas_n['sentence{}'.format(i + 1)] = qas[i]['sentence']
-        qas_n['answer{}'.format(i + 1)] = qas[i]['answer']
-        print(qas_n)
+    for i in range(5):
+        qas_5['sentence_blank{}'.format(i + 1)] = qas[i]['sentence_blank'] if i < len(qas) else None
+        qas_5['sentence{}'.format(i + 1)] = qas[i]['sentence'] if i < len(qas) else None
+        qas_5['answer{}'.format(i + 1)] = qas[i]['answer'] if i < len(qas) else None
+        print(qas_5)
 
-    return qas_n
+    return qas_5
 
 
 def postprocess_keywords(keywords):
