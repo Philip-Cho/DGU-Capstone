@@ -1,7 +1,9 @@
 from transformers import BartTokenizer, BartForConditionalGeneration
 import os, re
 import torch
+from django.views.decorators.csrf import csrf_exempt
 
+@csrf_exempt
 def tokenize_split(text, tokenizer):
     split_size = 1000
     tokens = tokenizer([text], return_tensors='pt', add_special_tokens=False)
@@ -22,7 +24,7 @@ def tokenize_split(text, tokenizer):
 
     return {'input_ids': input_ids, 'attention_mask': att_masks}
 
-
+@csrf_exempt
 def process_text(pre_summary):
     summary = pre_summary
 
@@ -56,7 +58,7 @@ def process_text(pre_summary):
 
     return pro_summary
 
-
+@csrf_exempt
 def summary_text(text, model, tokenizer, max_length=100):
     print("요약 시작=D")
     text = text.replace('\n', ' ')
@@ -97,11 +99,13 @@ def summary_text(text, model, tokenizer, max_length=100):
 
     return summary_list
 
-
+@csrf_exempt
 def sum_model_load():
     print("모델 로드 시작")
     path = os.getcwd()
 
-    model = BartForConditionalGeneration.from_pretrained(os.path.join(path, "bart_model/finetuning_cnn_pubmed_arxiv"),use_auth_token=True)
-    tokenizer = BartTokenizer.from_pretrained(os.path.join(path, "bart_model/tokenizer"),use_auth_token=True)
+    model = BartForConditionalGeneration.from_pretrained(os.path.join(path, "bart_model/finetuning_cnn_pubmed_arxiv"),use_auth_token=False)
+    tokenizer = BartTokenizer.from_pretrained(os.path.join(path, "bart_model/finetuning_cnn_pubmed_arxiv"),use_auth_token=False)
+    # model = BartForConditionalGeneration.from_pretrained("facebook/bart-large-cnn")
+    # tokenizer = BartTokenizer.from_pretrained("facebook/bart-large-cnn")
     return model, tokenizer

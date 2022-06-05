@@ -48,7 +48,7 @@
 <!--            좌측 div 시작-->
                     <div class = "col-6 col-12-small" style="width: 70%;">
                         <span id="video">
-                            <h3> Lecture Name : <span style="color:#ff3e33">{{ history_lecture.lecture_name }} </span> </h3>
+                            <h3> Lecture Name : <span id="lecture_id" style="color:#ff3e33">{{ history_lecture.lecture_name }} </span> </h3>
                             <iframe width="100%" height="500" src={{ history_lecture.embed_url }} title = "YouTube video player"
                                     frameborder="0"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -225,7 +225,7 @@
         $.ajax({
             url: 'http://127.0.0.1:8000/caffeine/recommandsave/',
             method: 'POST',
-            data: {'text': $('#textall').html() }
+            data: {'text': $('#lecture_id').text() }
         }).then(function (response) {
             $('#button_save').hide();
             alert(response)
