@@ -103,6 +103,6 @@ def sum_model_load():
     print("모델 로드 시작")
     path = os.getcwd()
 
-    model = BartForConditionalGeneration.from_pretrained(os.path.join(path, "../bart_model/finetuning_cnn_pubmed_arxiv"),use_auth_token=True)
-    tokenizer = BartTokenizer.from_pretrained(os.path.join(path, "../bart_model/tokenizer"),use_auth_token=True)
+    model = BartForConditionalGeneration.from_pretrained(os.path.join(path, "bart_model/finetuning_cnn_pubmed_arxiv"))
+    tokenizer = BartTokenizer.from_pretrained(os.path.join(path, "bart_model/finetuning_cnn_pubmed_arxiv"))
     return model, tokenizer
