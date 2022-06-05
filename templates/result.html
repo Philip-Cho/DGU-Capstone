@@ -115,20 +115,13 @@
         <!--                video end-->
                     </div>
 <!--                 비디오 오른쪽에 배치할 div-->
-                <div class = "col-6 col-12-small" style="width: 30%; height : 500px; overflow:auto;">
-                    <button id="capture_button" class="button small" onclick="getxy()" type="button">캡쳐</button>
-                    <button id="img_to_text" class="button small" onclick="code_to_text()" type="button">변환</button>
-
-                    <div id="screenshot"> <!--캡쳐 이미지 띄울 div-->
-                        <p>이곳에 이미지 띄울 자리임.</p>
-                        <br><br><br><br><br>
-                    </div> <!--캡쳐 이미지 띄울 div end-->
-                    <div id="code_box"><!-- text변환한거 띄울 div-->
-                        <p>이곳에 text 변환한거 띄울 거임</p>
-                        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-                        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-                    </div> <!--code_box end-->
-
+                <div class = "col-6 col-12-small" style="width: 30%; height : 600px; overflow:auto;">
+<!--                    <button id="capture_button" class="button small" onclick="getxy()" type="button">캡쳐</button>-->
+                    <button id="img_to_text" class="button small" onclick="code_to_text()" type="button">캡쳐&변환</button>
+                    <pre>
+                    <code id="code" style = "height: 500px;"><!-- text변환한거 띄울 div-->
+                     </code> <!--code_box end-->
+                    </pre>
                 </div> <!-- 오른쪽 div end-->
 
                 </div> <!--row div end-->
@@ -138,12 +131,8 @@
                                 url: 'http://127.0.0.1:8000/caffeine/code_to_text/',
                                 method: 'POST',
                                 }).then(function (response) {
-                                    $('#code_box').html(response[0]);
-                                    // var code_text = '';
-                                    // for ( var i = 0 ; i<4 ; i++ ){
-                                    //      code_text = code_text + response[i];
-                                    // }
-                                    // $('#code_box').html(code_text);
+                                    $('#code').html(response[0]);
+
                                 });
                         } //codetotext()끝
                 </script>
