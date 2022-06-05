@@ -105,7 +105,7 @@
 <!--            좌측 div 시작-->
                     <div class = "col-6 col-12-small" style="width: 70%;">
                         <span id="video" >
-                            <h2> Lecture Name : <span style="color:#ff3e33">{{ movie_title }}<span>  </h2>
+                            <h3> Lecture Name : <span style="color:#ff3e33">{{ movie_title }}<span>  </h3>
                             <iframe id="youtube" width="100%" height="500" src={{ embed_url }} title = "YouTube video player"
                                     frameborder="0"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -116,7 +116,7 @@
                     </div>
 <!--                 비디오 오른쪽에 배치할 div-->
                 <div class = "col-6 col-12-small" style="width: 30%; height : 600px; overflow:auto;">
-<!--                    <button id="capture_button" class="button small" onclick="getxy()" type="button">캡쳐</button>-->
+                    <button id="capture_button" class="button small" onclick="getxy()" type="button">캡쳐</button>
                     <button id="img_to_text" class="button small" onclick="code_to_text()" type="button">캡쳐&변환</button>
                     <pre>
                     <code id="code" style = "height: 500px;"><!-- text변환한거 띄울 div-->

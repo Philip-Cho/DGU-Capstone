@@ -165,10 +165,14 @@ def getxy(request):
     if request.method == 'POST':
         count = 1
         # 좌표값
-        x_left = float(request.POST['x_left'])
-        y_up = float(request.POST['y_up'])
-        x_right = float(request.POST['x_right'])
-        y_down = float(request.POST['y_down'])
+        # x_left = float(request.POST['x_left'])
+        # y_up = float(request.POST['y_up'])
+        # x_right = float(request.POST['x_right'])
+        # y_down = float(request.POST['y_down'])
+        x_left = float(88)
+        y_up = float(295)
+        x_right = float(1214)
+        y_down = float(640)
 
         print(x_left, y_up, x_right, y_down)
         pyautogui.screenshot('./img/{}.png'.format(count), region=(x_left, y_up, x_right, y_down))
