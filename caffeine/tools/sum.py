@@ -24,7 +24,12 @@ def tokenize_split(text, tokenizer):
 
 
 def process_text(pre_summary):
+    replace_sents_path = 'text/replace_sentences.txt'
     summary = pre_summary
+
+    with open(replace_sents_path, 'r', encoding='utf-8') as f:
+        replace_sents = f.readlines()
+        replace_sents = [word.strip() for word in replace_sents]
 
     if 'we propose' in summary or 'we present' in summary:
         summary = summary.replace('we propose', 'this lecture is about')
@@ -32,6 +37,15 @@ def process_text(pre_summary):
     if 'in this paper' in summary or 'in this article' in summary:
         summary = summary.replace('in this paper', 'in this lecture')
         summary = summary.replace('in this article', 'in this lecture')
+    for sent in replace_sents:
+        if sent[:3]=='the' and sent[-2:]=='is':   # the first part is
+            summary = summary.replace(sent, 'this part is')
+        elif 'published' in sent or 'extension' in sent:   #
+            summary = summary.replace(sent, '')   # this paper is an extension of
+        elif 'and in the' in sent:   # and in the first part
+            summary = summary.replace(sent, 'and')
+        elif sent[:7]=='this is' and sent[-2:]=='on':   # this is the {} in a series of {} {} on
+            summary = summary.replace(sent, 'this is about')
 
     ## 공백 처리(마침표/쉼표 앞뒤 공백), 대문자 변경(문장 첫문자 소문자)
     # 마침표 기준으로 문장 나눠주기
@@ -102,7 +116,6 @@ def summary_text(text, model, tokenizer, max_length=100):
 def sum_model_load():
     print("모델 로드 시작")
     path = os.getcwd()
-
     model = BartForConditionalGeneration.from_pretrained(os.path.join(path, "bart_model/finetuning_cnn_pubmed_arxiv"))
     tokenizer = BartTokenizer.from_pretrained(os.path.join(path, "bart_model/finetuning_cnn_pubmed_arxiv"))
     return model, tokenizer
