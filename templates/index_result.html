@@ -201,8 +201,7 @@
             $('#loading3').hide();
             $('#loading4').hide();
             $('#keyword').show();
-            $('#keyword').html(response.keyword);
-            $('#plot_box').html(response.plot_html);
+            $('#plot_box').append(response.plot_html);
             $('#exercise').html("<p>Q1. <br>" + response.sentence_blank1 + "</p>");
             $('#exercise').append("<p>Q2. <br>" + response.sentence_blank2 + "</p>");
             $('#exercise').append("<p>Q3. <br>" + response.sentence_blank3 + "</p>");
