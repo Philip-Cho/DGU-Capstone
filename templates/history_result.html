@@ -90,7 +90,9 @@
                         <div class="h-100 p-5 text-white bg-dark rounded-3">
                             <h2>강의 요약</h2>
                             <div id="sumall" style="margin-left: 0px;">
-                                {{ history_lecture.lecture_sum }}
+                                {% autoescape off %}
+                                {{history_lecture.lecture_sum}}
+                                {% endautoescape %}
                             </div>
                         </div>
                     </div>
