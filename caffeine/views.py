@@ -89,7 +89,7 @@ def result(request):  # 결과물 페이지(주소 입력 -> STT,요약등 결�
 
         # 동영상 이름 추출
         movie_title = down_title(movie_url).replace(":", " -")
-        movie_title = down_title(movie_url).replace("|", "_")
+        movie_title = movie_title.replace("|", "_")
         movie_titles.append(movie_title)
 
         # 파일 이름 정의

@@ -191,6 +191,7 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
+    let a1, a2, a3, a4, a5
     function keytext() {
         $('#loading3').show();
         $('#loading4').show();
@@ -199,15 +200,25 @@
             method: 'POST',
             data: {'text': $('#textall').html()}
         }).then(function (response) {
+            a1 = response.answer1;
+            a2 = response.answer2;
+            a3 = response.answer3;
+            a4 = response.answer4;
+            a5 = response.answer5;
             $('#loading3').hide();
             $('#loading4').hide();
             $('#keyword').show();
             $('#plot_box').append(response.plot_html);
-            $('#exercise').html("<p>Q1. <br>" + response.sentence_blank1 + "</p>");
-            $('#exercise').append("<p>Q2. <br>" + response.sentence_blank2 + "</p>");
-            $('#exercise').append("<p>Q3. <br>" + response.sentence_blank3 + "</p>");
-            $('#exercise').append("<p>Q4. <br>" + response.sentence_blank4 + "</p>");
-            $('#exercise').append("<p>Q5. <br>" + response.sentence_blank5 + "</p>");
+            $('#exercise').html("<div>Q1. <br>" + response.sentence_blank1);
+            $('#exercise').append('<input type=text id=test1 placeholder="정답을 입력해주세요." style= "width:20%;display:inline;">' + '<input class="btn btn-primary" type="button" onclick ="check1()" value="정답확인" style="position: absolute; margin-left: 10px;">' + "</div>");
+            $('#exercise').append("<div>Q2. <br>" + response.sentence_blank2 );
+            $('#exercise').append('<input type=text id=test2 placeholder="정답을 입력해주세요." style= "width:20%;display:inline;">' + '<input class="btn btn-primary" type="button" onclick ="check2()" value="정답확인" style="position: absolute; margin-left: 10px;">' + "</div>");
+            $('#exercise').append("<div>Q3. <br>" + response.sentence_blank3 );
+            $('#exercise').append('<input type=text id=test3 placeholder="정답을 입력해주세요." style= "width:20%;display:inline;">' + '<input class="btn btn-primary" type="button" onclick ="check3()" value="정답확인" style="position: absolute; margin-left: 10px;">' + "</div>");
+            $('#exercise').append("<div>Q4. <br>" + response.sentence_blank4 );
+            $('#exercise').append('<input type=text id=test4 placeholder="정답을 입력해주세요." style= "width:20%;display:inline;">' + '<input class="btn btn-primary" type="button" onclick ="check4()" value="정답확인" style="position: absolute; margin-left: 10px;">' + "</div>");
+            $('#exercise').append("<div>Q5. <br>" + response.sentence_blank5 );
+            $('#exercise').append('<input type=text id=test5 placeholder="정답을 입력해주세요." style= "width:20%;display:inline;">' + '<input class="btn btn-primary" type="button" onclick ="check5()" value="정답확인" style="position: absolute; margin-left: 10px;">' + "</div>");
             $('#exercise').show();
             $('#answer').html("<p>A1.&nbsp" + response.answer1 + "<br>" + response.sentence1 + "</p>");
             $('#answer').append("<p>A2.&nbsp" + response.answer2 + "<br>" + response.sentence2 + "</p>");
@@ -229,6 +240,42 @@
             $('#button_save').hide();
             alert(response)
         });
+    }
+
+    function check1() {
+        if ($("#test1").val() == a1){
+            alert("정답입니다!")
+        }else{
+            alert("땡")
+        }
+    }
+    function check2() {
+        if ($("#test2").val() == a2){
+            alert("정답입니다!")
+        }else{
+            alert("땡")
+        }
+    }
+    function check3() {
+        if ($("#test3").val() == a3){
+            alert("정답입니다!")
+        }else{
+            alert("땡")
+        }
+    }
+    function check4() {
+        if ($("#test4").val() == a4){
+            alert("정답입니다!")
+        }else{
+            alert("땡")
+        }
+    }
+    function check5() {
+        if ($("#test5").val() == a5){
+            alert("정답입니다!")
+        }else{
+            alert("땡")
+        }
     }
 </script>
 
