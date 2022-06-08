@@ -150,20 +150,23 @@ def load_key_model():
 def plot_keywords(key_dict=dict):
     keywords = key_dict['keywords']
     weights = key_dict['weights']
-    x = [i for i in range(10)]
-    y = [i for i in range(10)]
-    random.shuffle(x)
-    random.shuffle(y)
-    df = pd.DataFrame(zip(keywords, weights), columns=['keywords', 'weights'])
+    # x = [i for i in range(10)]
+    # y = [i for i in range(10)]
+    # random.shuffle(x)
+    # random.shuffle(y)
+    x = [7, 7, 6, 0, 4, 10, 0, 10, 3, 1]
+    y = [10, 0, 5, 10, 7, 3, 6, 8, 3, 1]
+
+    df = pd.DataFrame(zip(keywords, weights, x, y), columns=['keywords', 'weights', 'x', 'y'])
     # plotting
-    plt.figure(figsize=(10, 10))
+    plt.figure(figsize=(7, 7))
     plt.tick_params(left=False, right=False, labelleft=False,
                     labelbottom=False, bottom=False)
     sns.despine(bottom=True, left=True)
 
     for i in range(10):
         if df.loc[i,'weights']* 50 < 10:
-           fontdict={'color':'white', 'size':df.loc[i,'weights'] * 100}
+           fontdict={'color':'white', 'size':df.loc[i,'weights'] * 90}
         else:
             fontdict={'color':'white', 'size':df.loc[i,'weights'] * 50}
         plt.text(x=x[i], y=y[i],
@@ -171,14 +174,13 @@ def plot_keywords(key_dict=dict):
                  horizontalalignment='center',
                  s=df.loc[i, 'keywords'],
                  fontdict=fontdict)
-    #     plt.bar(x=weights, height=keywords)
-    #     sns.barplot(x=weights, y=keywords, palette='Reds')
+
     sns.scatterplot(x, y, alpha=0.6, linewidth=0,
-                    s=[w*80000 for w in weights],
+                    s=[w*50000 for w in weights],
                     hue=weights,
                     palette='Paired')  #coolwarm, Paired, flare, rocket
-    plt.xlim(-3,13)
-    plt.ylim(-3,13)
+    plt.xlim(-5,15)
+    plt.ylim(-5,15)
     plt.legend([], [], frameon=False)
 
     plot_file = BytesIO()

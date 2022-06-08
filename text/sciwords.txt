@@ -386,3 +386,10 @@ hat
 binary
 log
 handwritten
+boosting
+boosted
+adaboost
+random
+forest
+loss
+ada
