@@ -37,6 +37,9 @@ def process_text(pre_summary):
     if 'in this paper' in summary or 'in this article' in summary:
         summary = summary.replace('in this paper', 'in this lecture')
         summary = summary.replace('in this article', 'in this lecture')
+    in_the_list = ['in this set of videos', 'in the first video', 'in the second video', 'in the third video']
+    for s in in_the_list:
+        summary = summary.replace(s, '')
     for sent in replace_sents:
         if sent[:3]=='the' and sent[-2:]=='is':   # the first part is
             summary = summary.replace(sent, 'this part is')
@@ -46,6 +49,20 @@ def process_text(pre_summary):
             summary = summary.replace(sent, 'and')
         elif sent[:7]=='this is' and sent[-2:]=='on':   # this is the {} in a series of {} {} on
             summary = summary.replace(sent, 'this is about')
+        elif sent[:7]=='this is' and sent[-6:]=='papers':    # this is the {} in a series of {} papers
+            summary = summary.replace(sent, 'this is about')
+        elif sent=='the first paper is about':
+            summary = summary.replace(sent, 'the first part is')
+        elif sent=='the second paper is about':
+            summary = summary.replace(sent, 'the second part is')
+        elif sent=='the third paper is about':
+            summary = summary.replace(sent, 'the third part is')
+        elif 'videos in which' in sent:
+            summary = summary.replace(sent, '')
+        elif 'in the' in sent and 'video,' in sent:
+            summary = summary.replace(sent, '')
+        elif sent=='in this set of videos,':
+            summary = summary.replace(sent, '')
 
     ## 공백 처리(마침표/쉼표 앞뒤 공백), 대문자 변경(문장 첫문자 소문자)
     # 마침표 기준으로 문장 나눠주기
@@ -59,8 +76,9 @@ def process_text(pre_summary):
             continue
         if sent[0].islower():
             sent = sent[0].upper() + sent[1:]
-        if sent[0] == '*':
+        if sent[0] == '*' or sent[0]==',':
             sent = sent[2:]
+            sent = sent.strip()
         sent += '. '  # punctuation
         while '  ' in sent:
             sent = sent.replace('  ', ' ')
