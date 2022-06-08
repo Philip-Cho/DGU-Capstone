@@ -460,8 +460,9 @@ def searchlec(request):
     if request.method == 'POST':
         lec_key = request.POST['query']
 
-        # lecture_name에 따라 필터링
-        video_search = LectureHistory.objects.filter(lecture_name__contains=lec_key)
+        trick = "관리자"
+       # lecture_name에 따라 필터링
+        video_search = LectureHistory.objects.filter(lecture_name__icontains=lec_key,user_id=trick)
         # 검색된 강의들의 강의명과 링크를 반환
         toweb = {"lec_key":lec_key, "video_search": video_search}
 
