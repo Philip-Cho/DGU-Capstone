@@ -1,11 +1,24 @@
 clustering
 clusters
 cluster
+neuron
+neurons
+activation
+function
 algorithms
 supervised
+vertical
+horizontal
+diagonal
 similarity
 algorithm
 unsupervised
+discriminator
+discriminators
+datasets
+dimension
+dimensional
+support vector machine
 graph
 graphs
 nodes
@@ -24,6 +37,7 @@ subgraph
 predictions
 predicted
 features
+kernel
 kernels
 feature
 kernel
@@ -393,3 +407,7 @@ random
 forest
 loss
 ada
+euclidean
+square
+roc
+auc
