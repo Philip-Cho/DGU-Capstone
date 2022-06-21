@@ -337,7 +337,7 @@ def recommandsave(request):  # DB 저장을 위한 메소드
                 history.embed_url = history_lecture.embed_url
                 history.lecture_url = history_lecture.lecture_url
                 history.id_url = history_lecture.id_url
-                history.update_at = history_lecture.update_at
+                history.update_at = timezone.now()
                 try:
                     history.lecture_note = history_lecture.lecture_note
                     history.lecture_sum = history_lecture.lecture_sum
@@ -355,7 +355,7 @@ def recommandsave(request):  # DB 저장을 위한 메소드
                 history.embed_url = history_lecture.embed_url
                 history.lecture_url = history_lecture.lecture_url
                 history.id_url = history_lecture.id_url
-                history.update_at = history_lecture.update_at
+                history.update_at = timezone.now()
                 try:
                     history.lecture_note = history_lecture.lecture_note
                     history.lecture_sum = history_lecture.lecture_sum
