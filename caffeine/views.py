@@ -15,9 +15,9 @@ import os, os.path
 import pyautogui
 
 from .tools.down_movie import downYoutubeMp3, down_title
-from .tools.stt import upload_blob_from_memory, transcribe_gcs
+from .tools.stt import upload_blob_from_memory, transcribe_gcs_en, transcribe_gcs_kor
 from .tools.vision_text import text_detection
-from .tools.sum import summary_text, sum_model_load
+from .tools.sum import summary_text,split_text
 from .tools.textrank import key_question, load_key_model, plot_keywords
 
 from .models import LectureHistory
@@ -62,10 +62,10 @@ def index(request):  ## 인덱스 페이지(주소창 있는 화면)
 
 def model(request):  ## 모델 로드 페이지 (속도 개선 위해 임시)
 
-    ## summary 모델 로드
-    model_sum, token_sum = sum_model_load()
-    models_sum.append(model_sum)
-    tokens_sum.append(token_sum)
+    # ## summary 모델 로드
+    # model_sum, token_sum = sum_model_load()
+    # models_sum.append(model_sum)
+    # tokens_sum.append(token_sum)
 
     ## keybert 모델 로드
     models_key.append(load_key_model())
@@ -133,10 +133,18 @@ def text(request):  # STT 버튼 호출시 실행
         # 동영상 STT
         gcs_url = "gs://dgu_dsc_stt/"  # 스토리지 path
         gcs_file = gcs_url + contents[-1]  # 스토리지 내 동영상 path
-        try:  # STT
-            text_all = transcribe_gcs(gcs_file, contents[-1], 44100)
-        except:  # STT
-            text_all = transcribe_gcs(gcs_file, contents[-1], 48000)
+
+        lan = request.POST["language"]
+        if lan == "en":
+            try:  # STT
+                text_all = transcribe_gcs_en(gcs_file, contents[-1], 44100)
+            except:  # STT
+                text_all = transcribe_gcs_en(gcs_file, contents[-1], 48000)
+        else:
+            try:  # STT
+                text_all = transcribe_gcs_kor(gcs_file, contents[-1], 44100)
+            except:  # STT
+                text_all = transcribe_gcs_kor(gcs_file, contents[-1], 48000)
         end_time = time.time()
 
         # 텍스트 할당
@@ -210,7 +218,7 @@ def summary(request):  ## 요약문 생성 버튼을 위한 메소드
     if request.method == 'POST':
 
         # 요약문 생성
-        sum_text_l = summary_text(text_alls[-1], models_sum[-1], tokens_sum[-1])
+        sum_text_l = summary_text(text_alls[-1])
 
         # 요약문 생성
         sum_text = ""
@@ -467,3 +475,8 @@ def searchlec(request):
         toweb = {"lec_key":lec_key, "video_search": video_search}
 
     return render(request, 'search_board.html', toweb)
+
+
+@csrf_exempt  # @csrf_exempt: 사이트 간 위변조 방지 토큰
+def modal(request):  # 모달창 오픈
+    return render(request, 'modal.html')

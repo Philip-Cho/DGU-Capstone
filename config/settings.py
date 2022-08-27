@@ -34,7 +34,7 @@ AUTH_USER_MODEL = 'caffeine.Users'
 
 #  'caffeine.apps.caffeineConfig' 설치 필요
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    # 'django.contrib.admin',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
